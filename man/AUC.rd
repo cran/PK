@@ -9,12 +9,12 @@ Estimation of area under the concentration time curve (AUC) and area under the f
 }
 
 \usage{
-AUC(time, conc, exact=NA, numintp=2, numtail=3, prev=0)	     
+AUC(conc, time, exact=NA, numintp=2, numtail=3, prev=0)	     
 }
 
 \arguments{
-  \item{time}{ time points of concentration assessments. }
   \item{conc}{ levels of concentrations. }
+  \item{time}{ time points of concentration assessments. }
   \item{exact}{ time point for linear interpolation/extrapolation. }
   \item{numintp}{ number of last data points used for linear interpolation/extrapolation. }
   \item{numtail}{ number of last data points used for tail area correction. }
@@ -43,7 +43,7 @@ Cawello W. (1998). \emph{Parameter zur modellunabhängigen Pharmakokinetik}. Shak
 \author{Martin Wolfsegger}
 
 \examples{
-## example from Cawello W. (1998) page 71
+## example from Cawello W. (1998, page 71-74)
 time <- c(0, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4, 5, 6)
 conc <- c(0, 5.67, 20.6, 28.7, 22.5, 17.4, 17.7, 13.4, 11.0, 8.23, 5.14, 2.84) 
 AUC(conc=conc, time=time, exact=7, numtail=4)

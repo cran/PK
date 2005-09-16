@@ -1,6 +1,5 @@
 
-# function for halflife estimation according to the method of Lee et al.
-lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr")) {
+lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr"), longer.terminal=TRUE) {
 
 	# function for lad regression
 	lad <- function(y, x) {
@@ -20,24 +19,20 @@ lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr
 				}
 			}
 		}
-
-		return(list(k=k, d=d, resid=resid, mad=mad))
+		return(list(k=as.real(k), d=as.real(d), resid=as.real(resid), mad=as.real(mad)))
 	}
-
-
+	
 	# function for huber m regression 
 	# acknowledgment to werner engl
-	hub <- function(y, x, mad, sigmafactor=1.483, kfactor=1.5) { 
-
+	hub <- function(y, x, mad=lad(y=y,x=x)$mad, sigmafactor=1.483, kfactor=1.5) { 
 		hubloss <- function(kd) { # Huber loss for k=kd[1], d=kd[2]
 			absresid <- abs(y-kd[[1]]*x-kd[[2]])
 			khuber <- kfactor*sigmafactor*mad
 			sum(ifelse(absresid < khuber, absresid*absresid, khuber*(2*absresid-khuber))) 
 		}
-
 		start <- as.vector(c(lm(y~x)$coef[2], lm(y~x)$coef[1]))
 		res <- optim(start, hubloss, method="Nelder-Mead", control=c(reltol=1e-9))		
-		return(list(k = res$par[1], d = res$par[2], resid = res$value))		
+		return(list(k = as.real(res$par[1]), d = as.real(res$par[2]), resid = as.real(res$value)))		
 	}
 
 	# function for nonparametric regression
@@ -46,7 +41,7 @@ lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr
 		weighted.median <- function(w, x) { 
 			data <- data.frame(x, w)
 			data <- data[order(data$x),]
-			i <- 1; while(sum(data$w[1:i]) < 0.5) {i <- i + 1}
+			i <- 1; while(sum(data$w[1:i]) <= 0.5) {i <- i + 1}
 			ifelse (sum(data$w[1:i-1]) == 0.5, return((data$x[i-1]+data$x[i])/2), return(data$x[i]))
 		}
 
@@ -71,28 +66,37 @@ lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr
 		d <- median(y-k*x)
 		e <- y-k*x-d
 		resid <- sum((rank(e) - 1/2*(length(y)+1))*e)
-		return(list(k=k, d=d, resid=resid))
-	}	
-
+		return(list(k=as.real(k), d=as.real(d), resid=as.real(resid)))
+	}
+	
 	# function for internal ols regression
 	ols <- function(y, x){
 		res <- lm(y~x)
-		return(list(k = res$coef[2], 
-		    	d = res$coef[1], 
-		    	resid = sum(res$resid*res$resid)))
+		return(list(k = as.real(res$coef[2]), 
+	    		d = as.real(res$coef[1]), 
+	    		resid = as.real(sum(res$resid*res$resid))))
+
 	}
 
 	# exclude missing values
 	data <- na.omit(data.frame(conc, time))
-
+	
 	# subtraction of pre administration concentration for single dose studies
+	if(!is.real(prev)){stop('argument prev invalid')}
+	if(prev<0){stop('pre-dosing value must be greater 0')}
 	if (prev > 0) {data$conc <- data$conc - prev}
 
 	# check input parameters and remove values below or equal to zero
         method = match.arg(method)
+	if(!is.vector(data$time)){stop('argument time invalid')}
+	if(!is.vector(data$conc)){stop('argument conc invalid')}
 	if (any(data$time < 0)) {stop('timepoint below zero')}
 	if (points < 2) {stop('not enough points in terminal phase')}
-
+	if(!is.logical(longer.terminal)){stop('argument longer.terminal invalid')}
+	if(!is.real(points) || points%%1!=0){stop('argument points invalid')}
+	if(length(unique(data$time))!=length(data$time)){stop('limited for one observation per time point')}
+	
+	
 	# remove values below or equal to zero
 	if (any(data$conc <= 0)) {
 		for (i in 1:nrow(data)) {
@@ -129,8 +133,7 @@ lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr
 		final.term.model$k <- NA
 		final.init.model$k <- NA
 	}
-	
-	
+		
 	# calculate parameters of two-phase models
 	if (points > n-2) {stop('not enough points for inital phase')}
 	for (i in 2:(n-points)) {
@@ -161,21 +164,34 @@ lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr
 		lower <- data$time[i]
 		upper <- data$time[i+1]
 		chgpt <- (init.model$d - term.model$d) / (term.model$k - init.model$k)
-		if (!(chgpt <= lower | chgpt >= upper) & 
-			(term.model$k < 0) & 
-			(init.model$k < 0) & 
-			(init.model$k <= term.model$k)){  
-  			if (sum(term.model$resid, init.model$resid) < resid) {
-				final.init.model <- init.model
-				final.term.model <- term.model
-				final.chgpt <- as.real(chgpt)
-				resid <- sum(term.model$resid, init.model$resid)
-			}  
+		 if (!(chgpt <= lower | chgpt >= upper) &
+			(term.model$k < 0) & (init.model$k < 0)) {
+
+			if(!longer.terminal){
+  				if (sum(term.model$resid, init.model$resid) < resid) {
+					final.init.model <- init.model
+					final.term.model <- term.model
+					final.chgpt <- as.real(chgpt)
+					resid <- sum(term.model$resid, init.model$resid)
+				}  
+			}
+
+			if(longer.terminal){
+  				if (init.model$k <= term.model$k & sum(term.model$resid, init.model$resid) < resid) {
+					final.init.model <- init.model
+					final.term.model <- term.model
+					final.chgpt <- as.real(chgpt)
+					resid <- sum(term.model$resid, init.model$resid)
+				}  
+			}
+
+
 		}
 	}	
 
 	init.hl <- -log10(2)/final.init.model$k
 	term.hl <- -log10(2)/final.term.model$k
+	if(is.na(init.hl) | is.na(term.hl)){warning('No model evaluated')}
 
 	# format output objects
 	parms <- data.frame(initial=as.real(c(init.hl, final.init.model$k, final.init.model$d)),

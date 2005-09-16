@@ -1,6 +1,5 @@
 
-
-AUC <- function(time, conc, exact=NA, numintp=2, numtail=3, prev=0) {		     
+AUC <- function(conc, time, exact=NA, numintp=2, numtail=3, prev=0) {		     
 
 	# function for linear interpolation/extrapolation
 	linpol <- function(conc, time, exact){
@@ -18,6 +17,9 @@ AUC <- function(time, conc, exact=NA, numintp=2, numtail=3, prev=0) {
 		return(list(auc=auc, aumc=aumc))
 	}
 	
+	# check input parameters
+	if(length(time) != length(conc)){stop('time and conc differ in length')}
+
 	# remove missing values
 	data <- na.omit(data.frame(conc, time))
 	data <- data[order(data$time),]
@@ -75,8 +77,8 @@ AUC <- function(time, conc, exact=NA, numintp=2, numtail=3, prev=0) {
 	
 
 	# define output object
-	res <- data.frame(AUC=c(auc.observed, auc.interpol, auc.infinity), 
-		AUMC=c(aumc.observed, aumc.interpol, aumc.infinity))
+	res <- data.frame(AUC=c(as.real(auc.observed), as.real(auc.interpol), as.real(auc.infinity)), 
+		AUMC=c(as.real(aumc.observed), as.real(aumc.interpol), as.real(aumc.infinity)))
 	rownames(res) <- c('observed', 'interpolated', 'infinity')
 	return(res)      
 }      
