@@ -9,7 +9,7 @@ Estimation of inital and terminal half-life by two-phase linear regression fitti
 }
 
 \usage{
-lee(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr")) 	     
+lee(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr"), longer.terminal=TRUE) 	     
 }
 
 \arguments{
@@ -18,6 +18,7 @@ lee(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr"))
   \item{points}{ minimum data points in the terminal phase. }
   \item{prev}{ pre-dosing value. }
   \item{method}{ method of model fitting. } 
+  \item{longer.terminal}{ requesting a longer terminal than inital half-life.} 
 }
 
 \details{
@@ -33,6 +34,8 @@ The method \code{npr} uses the nonparametric regression to fit regression lines 
 
 The selection criteria for the best tuple of regression lines is the sum of squared residuals for the \code{ols} method, the sum of Huber M residuals for the \code{hub} method, the sum of absolute residuals for the \code{lad} method and the sum of a function on ranked residuals suggest by Birkes and Dodge (page 115, 1993) for the \code{npr} method. \cr \cr 
 
+When \code{longer.terminal=TRUE}, the best two-phase model where terminal half-life >= inital half-life is selected. When \code{longer.terminal=FALSE}, the best two-phase model among all possible tuples of regression is selected which can result in longer inital half-life than terminal half-life.
+
 If the pre-dosing value indicating the intrinsinc level is greater than 0, the pre-dosing value is subtracted from all concentration levels before calculation of inital and terminal half-life. 
 
 }
@@ -45,12 +48,12 @@ If the pre-dosing value indicating the intrinsinc level is greater than 0, the p
   \item{method}{ "lee". }
 }
 
-\note{Records including missing values and values below or equal to zero are omitted. }
+\note{Records including missing values and concentration values below or equal to zero are omitted. }
 
 \references{
-Birkes D. and Dodge Y. (1993). Alternative Methods of Regression. Wiley, New York, Chichester, Brisbane, Toronto, Singapore.  \cr \cr
-Holland P. W. and Welsch R. E. (1977). Robust regression using iteratively reweighted least-squares. Commun. Statist.-Theor. Meth. A6(9):813-827. \cr \cr
-Lee M. L., Poon Wai-Yin, Kingdon H. S. (1990). A two-phase linear regression model for biologic half-life data. Journal of Laboratory and Clinical Medicine. 115(6):745-748. \cr \cr
+Birkes D. and Dodge Y. (1993). \emph{Alternative Methods of Regression}. Wiley, New York, Chichester, Brisbane, Toronto, Singapore.  \cr \cr
+Holland P. W. and Welsch R. E. (1977). Robust regression using iteratively reweighted least-squares. \emph{Commun. Statist.-Theor. Meth.} A6(9):813-827. \cr \cr
+Lee M. L., Poon Wai-Yin, Kingdon H. S. (1990). A two-phase linear regression model for biologic half-life data. \emph{Journal of Laboratory and Clinical Medicine.} 115(6):745-748. \cr \cr
 }
 
 \author{Martin Wolfsegger}
@@ -60,28 +63,39 @@ Lee M. L., Poon Wai-Yin, Kingdon H. S. (1990). A two-phase linear regression mod
 ## example for preparation 1 from Lee et. al (1990)
 time <- c(0.5, 1.0, 4.0, 8.0, 12.0, 24.0)
 conc <- c(75, 72, 61, 54, 36, 6)
-result1 <- lee(conc=conc, time=time, method='ols', points=2)
+result1 <- lee(conc=conc, time=time, method='ols', points=2, longer.terminal=TRUE)
 print(result1$parms)
 plot(result1)
+plot(result1, log='y')
+
+## example for preparation 1 from Lee et. al (1990)
+time <- c(0.5, 1.0, 4.0, 8.0, 12.0, 24.0)
+conc <- c(75, 72, 61, 54, 36, 6)
+result2 <- lee(conc=conc, time=time, method='ols', points=2, longer.terminal=FALSE)
+print(result2$parms)
+plot(result2)
+plot(result2, log='y')
 
 ## example for preparation 2 from Lee et. al (1990)
 time <- c(0.5, 1.0, 2.0, 6.5, 8.0, 12.5, 24.0)
 conc <- c(75, 55, 48, 51, 39, 9, 5)
-result2 <- lee(conc=conc, time=time, method='ols', points=2)
-print(result2$parms)
-plot(result2)
+result3 <- lee(conc=conc, time=time, method='ols', points=2, longer.terminal=FALSE)
+print(result3$parms)
+plot(result3)
+plot(result3, log='y')
 
 ## advanced plots 
 xlim <- c(0,30)
 ylim <- c(1,80)
 ylab <- 'Log Concentration'
-text1 <- paste('Initial half-life:', round(result1$parms[1,1],3), '   Terminal half-life:', round(result1$parms[1,2],3))
-text2 <- paste('Initial half-life:', round(result2$parms[1,1],3), '   Terminal half-life:', round(result2$parms[1,2],3))
+xlab <- 'Time [hours]'
+text1 <- paste('Initial half-life:', round(result2$parms[1,1],2), '   Terminal half-life:', round(result2$parms[1,2],2))
+text2 <- paste('Initial half-life:', round(result3$parms[1,1],2), '   Terminal half-life:', round(result3$parms[1,2],2))
 split.screen(figs=c(2,1)) 
 screen(1)
-plot(result1, ylab=ylab, main='Half-life: Preparation 1', xlim=xlim, ylim=ylim, log='y', sub=text1)
+plot(result2, ylab=ylab, xlab=xlab, main='Half-life: Preparation 1', xlim=xlim, ylim=ylim, log='y', sub=text1)
 screen(2)
-plot(result2, ylab=ylab, main='Half-life: Preparation 2', xlim=xlim, ylim=ylim, log='y', sub=text2)
+plot(result3, ylab=ylab, xlab=xlab, main='Half-life: Preparation 2', xlim=xlim, ylim=ylim, log='y', sub=text2)
 close.screen(all=TRUE)
 }
 

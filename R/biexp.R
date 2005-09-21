@@ -1,56 +1,60 @@
 
-
-# biexponential model to estimate inital and terminal half-life
 biexp <- function(conc, time, prev=0, tol=1E-9){
-
+	
 	# get start values for optim by curve peeling
 	curve.peeling <- function(x, y){
-
+	
 		n <- length(y)	
 		res <- NA
 		Fmin <- Inf
-		
-		for(i in 3:(n-3)) {
+	
+		for(i in (n-3):3) { 
 			parms <- lm(log(y[(i+1):n])~x[(i+1):n])
-			b2 <- parms$coef[2]
+			b2 <- parms$coef[2]*(-1)
 			a2 <- exp(parms$coef[1])
-			ynew <- abs(y - a2*exp(b2*x))
+			ynew <- abs(y - a2*exp(-b2*x))
 			if(!any(is.na(ynew)) && !any(ynew==0) && !any(ynew==Inf)){
 				parms <- lm(log(ynew[1:i])~x[1:i])
-				b1 <- parms$coef[2]
+				b1 <- parms$coef[2]*(-1)
 				a1 <- exp(parms$coef[1])
-				F <- sum((y-(a1*exp(b1*x)+a2*exp(b2*x)))*(y-(a1*exp(b1*x)+a2*exp(b2*x))))
-				b1 <- b1*(-1)
-				b2 <- b2*(-1)
-				if (!is.na(F) && F < Fmin && !is.na(all(b1,b2)) && all(b1>0,b2>0) && b1 > b2) {
+				F <- sum((y-(a1*exp(-b1*x)+a2*exp(-b2*x)))*(y-(a1*exp(-b1*x)+a2*exp(-b2*x))))
+				if (!is.na(F) && F < Fmin && !is.na(all(a1,a2,b1,b2)) && all(b1>0,b2>0,b1>b2)) {
 					res <- as.real(c(a1=a1, dl=log(b1)-log(b2), a2=a2, b2=log(b2)))
 					Fmin <- F
-				}	
+				}
+
 			}
 		}
 
+
 		if (is.na(any(res))){
-			parms <- lm(log(y)~x)
-			b <- parms$coef[2]
+		parms <- lm(log(y)~x)
+			b <- parms$coef[2]*(-1)
 			a <- exp(parms$coef[1])
-			b <- b*(-1)
 			F <- sum(parms$resid*parms$resid)
 			if (!is.na(F) && F < Fmin && !is.na(b) && b > 0){
 				res <- as.real(c(a=a, b=log(b)))
 				Fmin <- F
 			}
 		}
-
 		return(res)
-	}
+	}	
 
 	# remove missing values
 	data <- na.omit(data.frame(conc, time))
-	time <- data$time
-	conc <- data$conc		
+			
+	# check input 
+	if(!is.real(prev)){stop('argument prev invalid')}
+	if(prev<0){stop('pre-dosing value must be greater 0')}
+	if (prev > 0) {data$conc <- data$conc - prev}
 
-	# subtraction of pre administration concentration for single dose studies
-	if (prev > 0) {conc <- conc - prev}
+	# check input parameters and remove values below or equal to zero
+	if(!is.vector(data$time)){stop('argument time invalid')}
+	if(!is.vector(data$conc)){stop('argument conc invalid')}
+	if (any(data$time < 0)) {stop('timepoint below zero')}
+	
+	time <- data$time
+	conc <- data$conc
 
 	# remove values below or equal to zero
 	if (any(conc <= 0)) {
