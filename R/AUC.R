@@ -1,58 +1,53 @@
-
 AUC <- function(conc, time, exact=NA, numintp=2, numtail=3, prev=0) {		     
 
 	# function for linear interpolation/extrapolation
 	linpol <- function(conc, time, exact){
-		parms <- lm(conc~time)
-		return(parms$coef[2] * exact + parms$coef[1])
+		parms <- lm(conc~time)$coef
+		return(parms[2] * exact + parms[1])
 	}
          
 	# function to add parts of auc and aumc
 	add <- function(time, conc) {
 		auc <- 0; aumc <- 0
-		for (i in 2:length(conc)) {
-			auc <- auc  + 1/2 * (time[i]-time[i-1]) * (conc[i]+conc[i-1])
-			aumc <- aumc + 1/2 * (time[i]-time[i-1]) * (conc[i]*time[i] + conc[i-1]*time[i-1])
-		}
+		len <- length(conc)
+		timediff <- diff(time)
+		auc <- 0.5*sum(timediff*rowSums(cbind(conc[2:len],conc[1:(len-1)])))
+		aumc <- 0.5*sum(timediff*rowSums(cbind(conc[2:len]*time[2:len],conc[1:(len-1)]*time[1:(len-1)])))
 		return(list(auc=auc, aumc=aumc))
 	}
-	
-	# check input parameters
-	if(length(time) != length(conc)){stop('time and conc differ in length')}
 
-	# remove missing values
-	data <- na.omit(data.frame(conc, time))
-	data <- data[order(data$time),]
-	time <- data$time
-	conc <- data$conc
-	n <- nrow(data) 	           
-
-	# subtraction of pre dosing concentration for single dose studies
-	if (prev > 0) {conc <- conc - prev}
-
-	# remove values below zero
-	if (any(conc < 0)) {
-		for (i in 1:length(conc)) {
-			if (conc[i] < 0) {conc[i] <- NA}
-		}
-		warning('concentration below zero were omitted')
-		data <- na.omit(data.frame(conc, time))
-		time <- data$time
-		conc <- data$conc	
-		n <- nrow(data) 
-	}
-
-	# check input parameters
+	# check input parameters and exclude missing values
+	if (!is.vector(time) || !is.vector(conc)) {stop('argument time and/or conc invalid')}
+	if (length(time) != length(conc)) {stop('time and conc differ in length')}
+	if (any(time < 0)) {stop('at least one timepoint below zero')}
 	if (numtail < 2) {stop('number of points for tail area correction must be greater than 1')}
 	if (numintp < 2) {stop('number of points for interpolation must be greater than 1')}
-	         
+	data <- na.omit(data.frame(conc, time))
+	
+	# check input parameters and remove values below zero
+	if (prev < 0) {stop('pre-dosing value must be greater 0')}
+	if (prev > 0) {data$conc <- data$conc - prev}
+	if (any(data$conc < 0)) {
+		data$conc[data$conc < 0] <- NA
+		warning('concentration below zero were omitted')
+		data <- na.omit(data)	
+	}
+	if (nrow(data) < 4) {stop('a minimum of 4 observations are required')}
+
+	# use data as vectors
+	data <- data[order(data$time),]
+	n <- nrow(data)
+	time <- data$time
+	conc <- data$conc
+	 	                
 	# calculate observed auc and aumc
 	auc.observed  <- add(time=time, conc=conc)$auc        
 	aumc.observed <- add(time=time, conc=conc)$aumc
-    
-	# calculate auc from 0 to infinity and aumc from 0 to infinity  by using last numtail points above zero
+
+	# calculate auc from 0 to infinity and aumc from 0 to infinity by using last numtail points above zero
 	tail <- subset(data.frame(conc, time), conc > 0)
 	tail <- tail[(nrow(tail)-numtail+1) : nrow(tail), ]	
+
 	lamda <- as.real(lm(log(tail$conc)~tail$time)$coef[2])*(-1)
 	auc.infinity <- auc.observed + conc[n]/lamda 
 	aumc.infinity <- aumc.observed + (conc[n]*time[n])/lamda + conc[n]/lamda**2
@@ -74,12 +69,10 @@ AUC <- function(conc, time, exact=NA, numintp=2, numtail=3, prev=0) {
 		auc.interpol <- add(time=time, conc=conc)$auc
 		aumc.interpol <- add(time=time, conc=conc)$aumc		
 	} 
-	
 
 	# define output object
 	res <- data.frame(AUC=c(as.real(auc.observed), as.real(auc.interpol), as.real(auc.infinity)), 
 		AUMC=c(as.real(aumc.observed), as.real(aumc.interpol), as.real(aumc.infinity)))
 	rownames(res) <- c('observed', 'interpolated', 'infinity')
 	return(res)      
-}      
-  
+}
