@@ -1,4 +1,3 @@
-
 lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr"), longer.terminal=TRUE) {
 
 	# function for lad regression
@@ -24,10 +23,12 @@ lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr
 	
 	# function for huber m regression 
 	# acknowledgment to werner engl
-	hub <- function(y, x, mad=lad(y=y,x=x)$mad, sigmafactor=1.483, kfactor=1.5) { 
+	#sigmafactor and kfactor removed from function arguments
+	hub <- function(y, x, mad=lad(y=y,x=x)$mad) { 
 		hubloss <- function(kd) { # Huber loss for k=kd[1], d=kd[2]
 			absresid <- abs(y-kd[[1]]*x-kd[[2]])
-			khuber <- kfactor*sigmafactor*mad
+			khuber <- 2.2245*mad
+			#end edit
 			sum(ifelse(absresid < khuber, absresid*absresid, khuber*(2*absresid-khuber))) 
 		}
 		start <- as.vector(c(lm(y~x)$coef[2], lm(y~x)$coef[1]))
@@ -78,39 +79,29 @@ lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr
 
 	}
 
-	# exclude missing values
+	# check input parameters and exclude missing values
+	method = match.arg(method)
+	if (!is.vector(time) || !is.vector(conc)) {stop('argument time and/or conc invalid')}
+	if (length(time) != length(conc)) {stop('time and conc differ in length')}
+	if (any(time < 0)) {stop('at least one timepoint below zero')}
+	if (!is.logical(longer.terminal)) {stop('argument longer.terminal invalid')}
+	if (points < 2) {stop('not enough points in terminal phase')}
 	data <- na.omit(data.frame(conc, time))
 	
-	# subtraction of pre administration concentration for single dose studies
-	if(!is.real(prev)){stop('argument prev invalid')}
-	if(prev<0){stop('pre-dosing value must be greater 0')}
-	if (prev > 0) {data$conc <- data$conc - prev}
-
 	# check input parameters and remove values below or equal to zero
-        method = match.arg(method)
-	if(!is.vector(data$time)){stop('argument time invalid')}
-	if(!is.vector(data$conc)){stop('argument conc invalid')}
-	if (any(data$time < 0)) {stop('timepoint below zero')}
-	if (points < 2) {stop('not enough points in terminal phase')}
-	if(!is.logical(longer.terminal)){stop('argument longer.terminal invalid')}
-	if(!is.real(points) || points%%1!=0){stop('argument points invalid')}
-	if(length(unique(data$time))!=length(data$time)){stop('limited for one observation per time point')}
-	
-	
-	# remove values below or equal to zero
+	if (prev < 0) {stop('pre-dosing value must be greater 0')}
+	if (prev > 0) {data$conc <- data$conc - prev}
 	if (any(data$conc <= 0)) {
-		for (i in 1:nrow(data)) {
-			if (data$conc[i] <= 0) {data$conc[i] <- NA}
-		}
+		data$conc[data$conc <= 0] <- NA
 		warning('concentration below or equal to zero were omitted')
 		data <- na.omit(data)	
 	}
 	if (nrow(data) < 4) {stop('a minimum of 4 observations are required')}
   
 	# transform data by logarithm at base 10
+	data <- data[order(data$time),]
 	n <- nrow(data)
- 	data$conc <- log10(data$conc)
-	conc <- data$conc
+ 	conc <- log10(data$conc)
 	time <- data$time
 	
 	# calculate parameters of one-phase model
@@ -164,7 +155,7 @@ lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr
 		lower <- data$time[i]
 		upper <- data$time[i+1]
 		chgpt <- (init.model$d - term.model$d) / (term.model$k - init.model$k)
-		 if (!(chgpt <= lower | chgpt >= upper) &
+		if (!(chgpt <= lower | chgpt >= upper) &
 			(term.model$k < 0) & (init.model$k < 0)) {
 
 			if(!longer.terminal){

@@ -1,24 +1,16 @@
 \name{AUC}
 \alias{AUC}
-\title{
-Area Under the Concentration Time Curve
-}
-
-\description{
-Estimation of area under the concentration time curve (AUC) and area under the first moment curve (AUMC).
-}
-
-\usage{
-AUC(conc, time, exact=NA, numintp=2, numtail=3, prev=0)	     
-}
+\title{Area Under the Concentration Time Curve}
+\description{Estimation of area under the concentration time curve (AUC) and area under the first moment curve (AUMC).}
+\usage{AUC(conc, time, exact=NA, numintp=2, numtail=3, prev=0)	}
 
 \arguments{
   \item{conc}{ levels of concentrations. }
-  \item{time}{ time points of concentration assessments. }
+  \item{time}{ time points of concentration assessment. }
   \item{exact}{ time point for linear interpolation/extrapolation. }
   \item{numintp}{ number of last data points used for linear interpolation/extrapolation. }
   \item{numtail}{ number of last data points used for tail area correction. }
-  \item{prev}{ pre-dosing value . }
+  \item{prev}{ pre-dosing value. }
 }
 
 \details{
@@ -28,11 +20,10 @@ Estimation of the linearly interpolated area under the concentration time curve 
 
 Estimation of the total area under the concentration curve (AUC 0-infinity) and total area under the first moment curve (AUMC 0-infinity) by using a tail area correction similar as suggested by Perrier and Gibaldi (Appendix D, 1982). \cr
 
-If the pre-dosing value indicating the intrinsinc level is greater than 0, the pre-dosing value is subtracted from all concentration levels before calculation of AUC and AUMC.
+If the pre-dosing value indicating that the intrinsic level is greater than 0, the pre-dosing value is subtracted from all concentration levels before calculation of AUC and AUMC.
 }
 
 \note{Records including missing values and values below zero are omitted. }
-
 \value{Data frame including AUC and AUMC estimates}
 
 \references{
@@ -40,7 +31,7 @@ Gibaldi M. and Perrier D. (1982). \emph{Pharmacokinetics. 2nd Edition}. Marcel D
 Cawello W. (1998). \emph{Parameter zur modellunabhängigen Pharmakokinetik}. Shaker Verlag, Aachen. \cr \cr
 }
 
-\author{Martin Wolfsegger}
+\author{Martin J. Wolfsegger and Thomas Jaki}
 
 \examples{
 ## example from Cawello W. (1998, page 71-74)
