@@ -1,6 +1,3 @@
-
-
-# plot function for halflife objects 
 plot.halflife <- function(x, xlab='Time', ylab='Concentration', main='Half-life Estimation', xlim=NULL, ylim=NULL, ...) {
 
 	init.k <- x$parms[2,1] 

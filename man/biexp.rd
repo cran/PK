@@ -1,7 +1,7 @@
 \name{biexp}
 \alias{biexp}
 \title{Two-Phase Half-Life Estimation by Biexponential Model}
-\description{Estimation of inital and terminal half-life by fitting a biexponential model.}
+\description{Estimation of initial and terminal half-life by fitting a biexponential model.}
 
 \usage{biexp(conc, time, prev=0, tol=1E-9, maxit=500)}
 
@@ -14,7 +14,7 @@
 }
 
 \details{
-Estimation of inital and terminal half-life using the biexponential \code{y=a1*exp(-b1*x)+a2*exp(-b2*x)} model with a parametrization to ensure b1 > b2 > 0 fitted by the least squares criteria with function \code{optim} of package \code{base} with \code{method} "Nelder-Mead". Curve peeling (Foss, 1969) is used get start values for nonlinear model fitting. When no adequate starting values are determined by curve peeling, a single exponential model is fitted with starting values obtained from an OLS regression on log transformed values with a parametrization to ensure a slope > 0. \cr \cr
+Estimation of initial and terminal half-life using the biexponential \code{y=a1*exp(-b1*x)+a2*exp(-b2*x)} model with a parameterization to ensure b1 > b2 > 0 fitted by the least squares criteria with function \code{optim} of package \code{base} with \code{method} "Nelder-Mead". Curve peeling (Foss, 1969) is used get start values for nonlinear model fitting. When no adequate starting values are determined by curve peeling, a single exponential model is fitted with starting values obtained from an OLS regression on log transformed values with a parameterization to ensure a slope > 0. \cr \cr
 
 If the pre-dosing value indicating the intrinsic level is greater than 0, the pre-dosing value is subtracted from all concentration levels before calculation of initial and terminal half-life.
 }
@@ -30,8 +30,9 @@ A list of S3 class \code{"halflife"} containing the following components: \cr
 \note{Records including missing values and values below or equal to zero are omitted. }
 
 \references{
-Foss S. D. (1969). A Method for Obtaining Initial Estimates of the Parameters in Exponential Curve Fitting. Biometrics. 25:580-584 \cr \cr
-Pinheiro J. C. and Bates D. M. (200). Mixed-Effects Models in S and S-PLUS. Springer, New York. \cr \cr
+Foss S. D. (1969). A Method for Obtaining Initial Estimates of the Parameters in Exponential Curve Fitting. \emph{Biometrics}, 25:580-584. \cr
+
+Pinheiro J. C. and Bates D. M. (2000). \emph{Mixed-Effects Models in S and S-PLUS}. Springer, New York. \cr
 }
 
 \author{Martin J. Wolfsegger and Thomas Jaki}

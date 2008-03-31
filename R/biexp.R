@@ -27,10 +27,13 @@ biexp <- function(conc, time, prev=0, tol=1E-9, maxit=500){
 			}
 
 		}
-
+		
+		# begin version 0.04
 		if (is.na(all(res))){
 			parms <- tryCatch(lm(log(y)~x), error=function(e) rep(NA,2))
-			if(!is.na(all(parms))){
+			# begin version 0.04
+			if(all(!is.na(parms$coef))){
+			# end version 0.04
 				b <- parms$coef[2]*(-1)
 				a <- exp(parms$coef[1])
 				F <- sum(parms$resid*parms$resid)
@@ -41,9 +44,8 @@ biexp <- function(conc, time, prev=0, tol=1E-9, maxit=500){
 			}
 		}
 		return(res)
+		# end version 0.04
 	}	
-
-
 
 	# check input parameters and exclude missing values
 	if (!is.vector(time) || !is.vector(conc)) {stop('argument time and/or conc invalid')}
@@ -119,10 +121,4 @@ biexp <- function(conc, time, prev=0, tol=1E-9, maxit=500){
 	class(res) <- 'halflife'
 	return(res)
 }
-
-
-
-
-
-
 

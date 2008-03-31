@@ -24,17 +24,18 @@ If the pre-dosing value indicating that the intrinsic level is greater than 0, t
 }
 
 \note{Records including missing values and values below zero are omitted. }
-\value{Data frame including AUC and AUMC estimates}
+\value{Data frame including AUC and AUMC estimates.}
 
 \references{
-Gibaldi M. and Perrier D. (1982). \emph{Pharmacokinetics. 2nd Edition}. Marcel Dekker, New York and Basel.  \cr \cr
-Cawello W. (1998). \emph{Parameter zur modellunabhängigen Pharmakokinetik}. Shaker Verlag, Aachen. \cr \cr
+Cawello W. (2003). \emph{Parameters for Compartment-free Pharmacokinetics. Standardisation of Study Design, Data Analysis and Reporting}. Shaker Verlag, Aachen. \cr 
+
+Gibaldi M. and Perrier D. (1982). \emph{Pharmacokinetics. 2nd Edition}. Marcel Dekker, New York and Basel.  \cr 
 }
 
 \author{Martin J. Wolfsegger and Thomas Jaki}
 
 \examples{
-## example from Cawello W. (1998, page 71-74)
+## example from Cawello W. (2003, page 70 and 74)
 time <- c(0, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4, 5, 6)
 conc <- c(0, 5.67, 20.6, 28.7, 22.5, 17.4, 17.7, 13.4, 11.0, 8.23, 5.14, 2.84) 
 AUC(conc=conc, time=time, exact=7, numtail=4)

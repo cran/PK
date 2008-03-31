@@ -1,4 +1,4 @@
-lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr"), longer.terminal=TRUE) {
+lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr"), lt=TRUE) {
 
 	# function for lad regression
 	lad <- function(y, x) {
@@ -23,7 +23,7 @@ lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr
 	
 	# function for huber m regression 
 	# acknowledgment to werner engl
-	#sigmafactor and kfactor removed from function arguments
+	# sigmafactor and kfactor removed from function arguments
 	hub <- function(y, x, mad=lad(y=y,x=x)$mad) { 
 		hubloss <- function(kd) { # Huber loss for k=kd[1], d=kd[2]
 			absresid <- abs(y-kd[[1]]*x-kd[[2]])
@@ -83,8 +83,7 @@ lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr
 	method = match.arg(method)
 	if (!is.vector(time) || !is.vector(conc)) {stop('argument time and/or conc invalid')}
 	if (length(time) != length(conc)) {stop('time and conc differ in length')}
-	if (any(time < 0)) {stop('at least one timepoint below zero')}
-	if (!is.logical(longer.terminal)) {stop('argument longer.terminal invalid')}
+	if (!is.logical(lt)) {stop('argument lt invalid')}
 	if (points < 2) {stop('not enough points in terminal phase')}
 	data <- na.omit(data.frame(conc, time))
 	
@@ -155,10 +154,10 @@ lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr
 		lower <- data$time[i]
 		upper <- data$time[i+1]
 		chgpt <- (init.model$d - term.model$d) / (term.model$k - init.model$k)
-		if (!(chgpt <= lower | chgpt >= upper) &
-			(term.model$k < 0) & (init.model$k < 0)) {
 
-			if(!longer.terminal){
+		# begin version 0.04
+		if (chgpt > lower & chgpt < upper){
+			if(!lt){
   				if (sum(term.model$resid, init.model$resid) < resid) {
 					final.init.model <- init.model
 					final.term.model <- term.model
@@ -166,18 +165,16 @@ lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr
 					resid <- sum(term.model$resid, init.model$resid)
 				}  
 			}
-
-			if(longer.terminal){
-  				if (init.model$k <= term.model$k & sum(term.model$resid, init.model$resid) < resid) {
+			if(lt){ 
+  				if (init.model$k <= term.model$k & term.model$k <0 & sum(term.model$resid, init.model$resid) < resid) {
 					final.init.model <- init.model
 					final.term.model <- term.model
 					final.chgpt <- as.real(chgpt)
 					resid <- sum(term.model$resid, init.model$resid)
 				}  
 			}
-
-
 		}
+		# end version 0.04
 	}	
 
 	init.hl <- -log10(2)/final.init.model$k
