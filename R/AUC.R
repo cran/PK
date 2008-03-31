@@ -19,9 +19,9 @@ AUC <- function(conc, time, exact=NA, numintp=2, numtail=3, prev=0) {
 	# check input parameters and exclude missing values
 	if (!is.vector(time) || !is.vector(conc)) {stop('argument time and/or conc invalid')}
 	if (length(time) != length(conc)) {stop('time and conc differ in length')}
-	if (any(time < 0)) {stop('at least one timepoint below zero')}
-	if (numtail < 2) {stop('number of points for tail area correction must be greater than 1')}
-	if (numintp < 2) {stop('number of points for interpolation must be greater than 1')}
+	if (numtail < 2) {stop('number of time points for tail area correction must be greater than 1')}
+	if (numtail > length(time)) {stop('number of time points for tail area correction is greater than length(time)')}
+	if (numintp < 2) {stop('number of time points for interpolation must be greater than 1')}
 	data <- na.omit(data.frame(conc, time))
 	
 	# check input parameters and remove values below zero
@@ -48,10 +48,10 @@ AUC <- function(conc, time, exact=NA, numintp=2, numtail=3, prev=0) {
 	tail <- subset(data.frame(conc, time), conc > 0)
 	tail <- tail[(nrow(tail)-numtail+1) : nrow(tail), ]	
 
-	lamda <- as.real(lm(log(tail$conc)~tail$time)$coef[2])*(-1)
-	auc.infinity <- auc.observed + conc[n]/lamda 
-	aumc.infinity <- aumc.observed + (conc[n]*time[n])/lamda + conc[n]/lamda**2
-	if(lamda < 0){
+	lambda <- as.real(lm(log(tail$conc)~tail$time)$coef[2])*(-1)
+	auc.infinity <- auc.observed + conc[n]/lambda 
+	aumc.infinity <- aumc.observed + (conc[n]*time[n])/lambda + conc[n]/lambda**2
+	if(lambda < 0){
 		warning('tail area correction incorrect due to increasing concentration of last numtail points')	
 		auc.infinity <- NA
 		aumc.infinity <- NA
