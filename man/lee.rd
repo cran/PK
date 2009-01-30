@@ -3,16 +3,16 @@
 \title{Two-Phase Half-Life Estimation by Linear Fitting}
 \description{Estimation of initial and terminal half-life by two-phase linear regression fitting.}
 \usage{
-lee(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr"), lt=TRUE) 	     
+lee(conc, time, points=3, baseline=0, method=c("lad", "ols", "hub", "npr"), lt=TRUE) 	     
 }
 
 \arguments{
-  \item{time}{ time points of concentration assessments. }
-  \item{conc}{ levels of concentrations. }
-  \item{points}{ minimum number of data points in the terminal phase. }
-  \item{prev}{ pre-dosing value. }
-  \item{method}{ method of model fitting. } 
-  \item{lt}{ requesting a longer terminal than initial half-life.} 
+  \item{conc}{ Levels of concentrations. }
+  \item{time}{ Time points of concentration assessment. }
+  \item{points}{ Minimum number of data points in the terminal phase (default=\code{3}). }
+  \item{baseline}{ Pre-dosing value (default=\code{0}). }
+  \item{method}{ Method of model fitting (default=\code{lad}). } 
+  \item{lt}{ Logical value indicating whether requesting a longer terminal than initial half-life (default=\code{TRUE}).} 
 }
 
 \details{
@@ -28,9 +28,9 @@ The method \code{npr} uses the nonparametric regression to fit regression lines 
 
 The selection criteria for the best tuple of regression lines is the sum of squared residuals for the \code{ols} method, the sum of Huber M residuals for the \code{hub} method, the sum of absolute residuals for the \code{lad} method and the sum of a function on ranked residuals for the \code{npr} method (see Birkes and Dodge (page 115, 1993)). Calculation details can be found in Wolfsegger (2006). \cr \cr
 
-When \code{lt=TRUE}, the best two-phase model where terminal half-life >= initial half-life is selected. When \code{lt=FALSE}, the best two-phase model among all possible tuples of regression is selected which can result in longer initial half-life than terminal half-life. \cr \cr
+When \code{lt=TRUE}, the best two-phase model where terminal half-life >= initial half-life >= 0 is selected. When \code{lt=FALSE}, the best two-phase model among all possible tuples of regression is selected which can result in longer initial half-life than terminal half-life and/or in half-lifes < 0. \cr \cr
 
-If the pre-dosing value indicating the intrinsic level is greater than 0, the pre-dosing value is subtracted from all concentration levels before calculation of initial and terminal half-life.
+If the baseline value indicating that the intrinsic level is greater than zero, the pre-dosing value is subtracted from all concentration levels before calculation. Resulting values of zero or below zero are omitted.
 }
 
 \value{
@@ -54,60 +54,60 @@ Lee M. L., Poon Wai-Yin, Kingdon H. S. (1990). A two-phase linear regression mod
 Wolfsegger M. J. (2006). The R Package PK for Basic Pharmacokinetics. \emph{Biometrie und Medizin}, 5:61-68. \cr
 }
 
-\author{Martin J. Wolfsegger and Thomas Jaki}
+\author{Martin J. Wolfsegger}
 
 \examples{
 ## example for preparation 1 from Lee et al. (1990)
 time <- c(0.5, 1.0, 4.0, 8.0, 12.0, 24.0)
 conc <- c(75, 72, 61, 54, 36, 6)
-result1 <- lee(conc=conc, time=time, method='ols', points=2, lt=TRUE)
-print(result1$parms)
-plot(result1)
-plot(result1, log='y')
-
-## example for preparation 1 from Lee et al. (1990)
-time <- c(0.5, 1.0, 4.0, 8.0, 12.0, 24.0)
-conc <- c(75, 72, 61, 54, 36, 6)
-result2 <- lee(conc=conc, time=time, method='ols', points=2, lt=FALSE)
-print(result2$parms)
-plot(result2)
-plot(result2, log='y')
+res1 <- lee(conc=conc, time=time, method='ols', points=2, lt=TRUE)
+res2 <- lee(conc=conc, time=time, method='ols', points=2, lt=FALSE)
+plot(res1, log='y', ylim=c(1,100))
+plot(res2, add=TRUE, lty=2)
 
 ## example for preparation 2 from Lee et al. (1990)
 time <- c(0.5, 1.0, 2.0, 6.5, 8.0, 12.5, 24.0)
 conc <- c(75, 55, 48, 51, 39, 9, 5)
-result3 <- lee(conc=conc, time=time, method='ols', points=2, lt=FALSE)
-print(result3$parms)
-plot(result3)
-plot(result3, log='y')
+res3 <- lee(conc=conc, time=time, method='ols', points=2, lt=FALSE)
+print(res3$parms)
+plot(res2, log='y', ylim=c(1,100), lty=1, pch=20)
+plot(res3, add=TRUE, lty=2, pch=21)
+legend(x=0, y=10, pch=c(20,21), lty=c(1,2), legend=c('Preperation 1','Preperation 2'))
 
-## advanced plots 
-xlim <- c(0,30)
-ylim <- c(1,80)
-ylab <- 'Log Concentration'
-xlab <- 'Time [hours]'
-
-text1 <- paste('Initial half-life:', round(result2$parms[1,1],2), 
-'   Terminal half-life:', round(result2$parms[1,2],2))
-text2 <- paste('Initial half-life:', round(result3$parms[1,1],2), 
-'   Terminal half-life:', round(result3$parms[1,2],2))
-
-split.screen(figs=c(2,1)) 
-screen(1)
-plot(result2, ylab=ylab, xlab=xlab, main='Half-life: Preparation 1', 
-xlim=xlim, ylim=ylim, log='y', sub=text1)
-screen(2)
-plot(result3, ylab=ylab, xlab=xlab, main='Half-life: Preparation 2', 
-xlim=xlim, ylim=ylim, log='y', sub=text2)
-close.screen(all=TRUE)
-
-## artificial example
+## artificial examples
 time <- c(5, 180,  360,  540,  720)/60
 conc <- c(2.360, 0.061, 0.019, 0.012, 0.024)
-result4 <- lee(conc=conc, time=time, method='lad', points=2, lt=FALSE)
-print(result4)
-plot(result4)
-plot(result4, log='y')
+res4 <- lee(conc=conc, time=time, method='lad', points=2, lt=FALSE)
+print(res4$parms)
+plot(res4)
+plot(res4, log='y')
+
+time <- seq(1:10)
+conc <- c(1,2,3,4,5,5,4,3,2,1)
+res5 <- lee(conc=conc, time=time, method='lad', points=2, lt=FALSE)
+plot(res5, log='y', ylim=c(1,7), main='', xlab='', ylab='', pch=19)
+
+## real life example
+## dataset Indometh of package datasets
+require(datasets)
+res6 <- data.frame(matrix(ncol=3, nrow=length(unique(Indometh$Subject))))
+colnames(res6) <- c('ID', 'initial', 'terminal')
+row <- 1
+for(i in unique(Indometh$Subject)){
+   temp <- subset(Indometh, Subject==i)
+   res6[row, 1] <- unique(temp$Subject)
+   res6[row, c(2:3)] <- lee(conc=temp$conc, time=temp$time, method='lad')$parms[1,]
+   row <- row + 1
+}
+print(res6)
+
+# geometric means and corresponding two-sided CIs
+exp(mean(log(res6$initial)))
+exp(t.test(log(res6$initial), conf.level=0.95)$conf.int)
+
+exp(mean(log(res6$terminal)))
+exp(t.test(log(res6$terminal), conf.level=0.95)$conf.int)
+
 }
 
 \keyword{misc}

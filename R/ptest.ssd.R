@@ -4,9 +4,9 @@ ptest.ssd <- function(conc, time, group, alternative=c("two.sided", "less", "gre
     statistic <- function(data, grpfact){	
         data1 <- subset(data, data$group == grpfact[1])
         data2 <- subset(data, data$group == grpfact[2])
-        est1 <- auc.ssd(conc=data1$conc, time=data1$time, method='bailer')$est
-        est2 <- auc.ssd(conc=data2$conc, time=data2$time, method='bailer')$est		
-        return(est1-est2)
+        est1 <- auc.ci(conc=data1$conc, time=data1$time, method='z')$est
+        est2 <- auc.ci(conc=data2$conc, time=data2$time, method='z')$est		
+        return(est1[1,1]-est2[1,1])
     }
 
     # function to calculate weights for linear trapezoidal rule

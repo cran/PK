@@ -8,21 +8,21 @@ eqv.ssd(conc, time, group, method=c("fieller", "asymp", "boott"),
 }
 
 \arguments{
-  \item{conc}{ vector of concentrations. }
-  \item{time}{ vector of time points. }
-  \item{group}{ vector of grouping variable. }
-  \item{method}{ character string specifying the method for calculation of confidence intervals; default=\code{fieller}. }
-  \item{conf.level}{ confidence level; default=\code{0.90}. }
-  \item{strata}{ vector of one strata variable, only available for method \code{boott}. }
-  \item{nsample}{ number of bootstrap iterations for method \code{boott}; default=\code{1000}. }
-  \item{data}{ optional data frame containing variables named as \code{conc}, \code{time}, \code{group} and \code{strata}. } 
+  \item{conc}{ Time points of concentration assessment. }
+  \item{time}{ Levels of concentrations. }
+  \item{group}{ Grouping variable with two levels. }
+  \item{method}{ Character string specifying the method for calculation of confidence intervals (default=\code{fieller}). }
+  \item{conf.level}{ Confidence level (default=\code{0.90}). }
+  \item{strata}{ Vector of one strata variable, only available for method \code{boott}. }
+  \item{nsample}{ Number of bootstrap iterations for method \code{boott} (default=\code{1000}). }
+  \item{data}{ Optional data frame containing variables named as \code{conc}, \code{time}, \code{group} and \code{strata}. } 
 }
 
 \details{
 Calculation of a confidence interval for the ration of two AUCs (from 0 to the last time point) assessed in a serial sampling design.
  In a serial sampling design only one measurement is available per analysis subject at a specific time point. The AUC (from 0 to the last time point) is calculated using the linear trapezoidal rule on the arithmetic means at the different time points.
- Details for calculation can be found in Wolfsegger (2007) and in Jaki \emph{et al.} (in press). \cr \cr
-The \code{fieller} method is based on Fieller's theorem (1954) using the critical value from a t-distribution with Satterthwaite's approximation (1946) to the degrees of freedom for calculation of confidence intervals. \cr \cr
+ Details for calculation can be found in Wolfsegger (2007) and in Jaki \emph{et al.} \cr \cr
+The \code{fieller} method is based on Fieller"s theorem (1954) using the critical value from a t-distribution with Satterthwaite"s approximation (1946) to the degrees of freedom for calculation of confidence intervals. \cr \cr
 The \code{asymp} method is based on the limit distribution for the ratio using the critical value from a normal distribution for calculation of confidence intervals. \cr \cr
 The \code{boott} method uses the standard error of the limit distribution for the ratio where the critical value is obtained by the bootstrap-\emph{t} approach. Using \code{boott} an additional strata variable for bootstrapping can be specified. \cr
 }
@@ -42,9 +42,9 @@ A data frame consisting of:
 \references{
 Fieller E. C. (1954). Some problems in interval estimation. \emph{Journal of the Royal Statistical Society, Series B}, 16:175-185. \cr 
 
-Jaki T., Wolfsegger M. J. and Ploner M. Confidence intervals for ratios of AUC's in the case of serial sampling: A comparison of seven methods. \emph{Pharmaceutical statistics}, in press. \cr 
+Jaki T., Wolfsegger M. J. and Ploner M. (In press). Confidence intervals for ratios of AUCs in the case of serial sampling: A comparison of seven methods. \emph{Pharmaceutical Statistics}, epub ahead of print. \cr 
 
-Nedelman J. R., Gibiansky E. and Lau D. T. W. (1995). Applying Bailer's method for AUC confidence intervals to sparse sampling. \emph{Pharmaceutical Research}, 12(1):124-128. \cr 
+Nedelman J. R., Gibiansky E. and Lau D. T. W. (1995). Applying Bailer"s method for AUC confidence intervals to sparse sampling. \emph{Pharmaceutical Research}, 12(1):124-128. \cr 
 
 Satterthwaite F. E. (1946). An approximate distribution of estimates of variance components. \emph{Biometrics Bulletin}, 2:110-114. \cr
 
@@ -63,18 +63,19 @@ time <- c(1, 1, 2, 2, 4, 4, 8, 8, 24, 24)
 
 data <- data.frame(conc=c(m.030, f.030, m.100, f.100), 
                    time=rep(time, 4), 
-                   sex=c(rep('m', 10), rep('f', 10), rep('m', 10), rep('f', 10)),
+                   sex=c(rep("m", 10), rep("f", 10), rep("m", 10), rep("f", 10)),
                    dose=c(rep(30, 20), rep(100, 20)))
 
 data$concadj <- data$conc / data$dose
-eqv.ssd(conc=data$concadj, time=data$time, group=data$dose, method='asymp')
-eqv.ssd(conc=data$concadj, time=data$time, group=data$dose, method='fieller')
+eqv.ssd(conc=data$concadj, time=data$time, group=data$dose, method="asymp")
+eqv.ssd(conc=data$concadj, time=data$time, group=data$dose, method="fieller")
 
 set.seed(310578)
-eqv.ssd(conc=data$concadj, time=data$time, group=data$dose, method='boott', nsample=1E4)
+eqv.ssd(conc=data$concadj, time=data$time, group=data$dose, method="boott", nsample=1E3)
 
 set.seed(310578)
-eqv.ssd(conc=data$concadj, time=data$time, group=data$dose, method='boott', strata=data$sex, nsample=1E4)
+eqv.ssd(conc=data$concadj, time=data$time, group=data$dose, method="boott",
+        strata=data$sex, nsample=1E3)
 }
 
 \keyword{misc}
