@@ -1,4 +1,4 @@
-lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr"), lt=TRUE) {
+lee <- function(conc, time, points=3, baseline=0, method=c("lad", "ols", "hub", "npr"), lt=TRUE) {
 
 	# function for lad regression
 	lad <- function(y, x) {
@@ -88,8 +88,8 @@ lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr
 	data <- na.omit(data.frame(conc, time))
 	
 	# check input parameters and remove values below or equal to zero
-	if (prev < 0) {stop('pre-dosing value must be greater 0')}
-	if (prev > 0) {data$conc <- data$conc - prev}
+	if (baseline < 0) {stop('pre-dosing value must be greater 0')}
+	if (baseline > 0) {data$conc <- data$conc - baseline}
 	if (any(data$conc <= 0)) {
 		data$conc[data$conc <= 0] <- NA
 		warning('concentration below or equal to zero were omitted')
@@ -155,7 +155,6 @@ lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr
 		upper <- data$time[i+1]
 		chgpt <- (init.model$d - term.model$d) / (term.model$k - init.model$k)
 
-		# begin version 0.04
 		if (chgpt > lower & chgpt < upper){
 			if(!lt){
   				if (sum(term.model$resid, init.model$resid) < resid) {
@@ -174,7 +173,6 @@ lee <- function(time, conc, points=3, prev=0, method=c("lad", "ols", "hub", "npr
 				}  
 			}
 		}
-		# end version 0.04
 	}	
 
 	init.hl <- -log10(2)/final.init.model$k
