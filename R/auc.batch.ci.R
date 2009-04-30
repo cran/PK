@@ -88,9 +88,9 @@ auc.batch.ci <- function(conc, time, group=NULL, method=c("t", "z", "boott"),  a
       aucvar<-rep(NA,B)
       for(i in 1:B){
         auc<-auc +  mean(colSums(w[tindex[[i]]]*matrix(conc[[i]],ncol=n,byrow=TRUE)))
-        aucvar[i]<-sum(w[tindex[[i]]]%o%w[tindex[[i]]]*cov(matrix(conc[[i]],nrow=n)))/n
+        aucvar[i]<-sum(w[tindex[[i]]]%o%w[tindex[[i]]]*cov(matrix(conc[[i]],nrow=n)))/(n-1)
       }
-      res <- list(var=sum(aucvar), est=auc, df=sum(aucvar)^2/sum(aucvar^2/2))
+      res <- list(var=sum(aucvar)/n, est=auc, df=(sum(aucvar)/n)^2/sum(aucvar^2/(n^2*(n-1))))
       return(res)
     }
   }
