@@ -1,9 +1,10 @@
 \name{lee}
 \alias{lee}
-\title{Two-Phase Half-Life Estimation by Linear Fitting}
+\title{Two-phase half-life estimation by linear fitting}
 \description{Estimation of initial and terminal half-life by two-phase linear regression fitting.}
 \usage{
-lee(conc, time, points=3, baseline=0, method=c("lad", "ols", "hub", "npr"), lt=TRUE) 	     
+lee(conc, time, points=3, baseline=0, method=c("lad", "ols", "hub", "npr"), 
+     lt=TRUE) 	     
 }
 
 \arguments{
@@ -16,13 +17,13 @@ lee(conc, time, points=3, baseline=0, method=c("lad", "ols", "hub", "npr"), lt=T
 }
 
 \details{
-Estimation of initial and terminal half-life based on the method of Lee \emph{et al.} (1990). This method uses a two-phase linear regression approach separate the model into two straight lines based on the selection of the log10 transformed concentration values. For two-phase models the initial and terminal half-life were determined from the slopes of the regression lines. If a single-phase model is selected by this method, the corresponding half-life is utilized as both initial and terminal phase half-life. Half-life is determined only for decreasing initial and terminal phases. \cr \cr
+Estimation of initial and terminal half-life based on the method of Lee \emph{et al.} (1990). This method uses a two-phase linear regression approach separate the model into two straight lines based on the selection of the log10 transformed concentration values. For two-phase models the initial and terminal half-life were determined from the slopes of the regression lines. If a single-phase model is selected by this method, the corresponding half-life is utilized as both initial and terminal phase half-life. Half-life is determined only for decreasing initial and terminal phases. \cr\cr 
 
-The method \code{ols} uses the ordinary least squares regression (OLS) to fit regression lines. \cr \cr
+The method \code{ols} uses the ordinary least squares regression (OLS) to fit regression lines. \cr\cr
 
-The method \code{lad} uses the absolute deviation regression (LAD) to fit regression lines by using the algorithm as described in Birkes and Dodge (chapter 4, 1993) for calculation of regression estimates.  \cr \cr
+The method \code{lad} uses the absolute deviation regression (LAD) to fit regression lines by using the algorithm as described in Birkes and Dodge (chapter 4, 1993) for calculation of regression estimates.  \cr\cr
 
-The method \code{hub} uses the Huber M regression to fit regression lines. Huber M-estimates are calculated by non-linear estimation using the function \code{optim}, where OLS regression parameters are used as starting values. The function that is minimized involved k = 1.5*1.483*MAD, where MAD is defined as the median of absolute deviation of residuals obtained by a least absolute deviation (LAD) regression based on the observed data. The initial value of MAD is used and not updated during iterations (Holland and Welsch, 1977). \cr \cr
+The method \code{hub} uses the Huber M regression to fit regression lines. Huber M-estimates are calculated by non-linear estimation using the function \code{optim}, where OLS regression parameters are used as starting values. The function that is minimized involved k = 1.5*1.483*MAD, where MAD is defined as the median of absolute deviation of residuals obtained by a least absolute deviation (LAD) regression based on the observed data. The initial value of MAD is used and not updated during iterations (Holland and Welsch, 1977). \cr\cr
 
 The method \code{npr} uses the nonparametric regression to fit regression lines by using the algorithm as described in Birkes and Dodge (chapter 6, 1993) for calculation of regression estimates. \cr \cr
 
@@ -45,11 +46,11 @@ A list of S3 class \code{"halflife"} containing the following components: \cr
 \note{Records including missing values and concentration values below or equal to zero are omitted. }
 
 \references{
-Birkes D. and Dodge Y. (1993). \emph{Alternative Methods of Regression}. Wiley, New York, Chichester, Brisbane, Toronto, Singapore.  \cr 
+Birkes D. and Dodge Y. (1993). \emph{Alternative Methods of Regression}. Wiley, New York, Chichester, Brisbane, Toronto, Singapore.  \cr \cr
 
-Holland P. W. and Welsch R. E. (1977). Robust regression using iteratively reweighted least-squares. \emph{Commun. Statist.-Theor. Meth.} A6(9):813-827. \cr
+Holland P. W. and Welsch R. E. (1977). Robust regression using iteratively reweighted least-squares. \emph{Commun. Statist.-Theor. Meth.} A6(9):813-827. \cr\cr
 
-Lee M. L., Poon Wai-Yin, Kingdon H. S. (1990). A two-phase linear regression model for biologic half-life data. \emph{Journal of Laboratory and Clinical Medicine.} 115(6):745-748. \cr
+Lee M. L., Poon Wai-Yin, Kingdon H. S. (1990). A two-phase linear regression model for biologic half-life data. \emph{Journal of Laboratory and Clinical Medicine.} 115(6):745-748. \cr\cr
 
 Wolfsegger M. J. (2006). The R Package PK for Basic Pharmacokinetics. \emph{Biometrie und Medizin}, 5:61-68. \cr
 }
