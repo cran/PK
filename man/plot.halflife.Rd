@@ -1,13 +1,13 @@
 \name{plot.halflife}
 \alias{plot.halflife}
-\title{Plot Regression Lines Used for Half-life Estimation}
+\title{Plot regression lines used for half-life estimation}
 \description{This method plots objects of S3 class \code{"halflife"} (\link{biexp} and \link{lee}). }
 
 \usage{\method{plot}{halflife}(x, xlab='Time', ylab='Concentration', 
         main='Half-life Estimation', xlim=NULL, ylim=NULL, add=FALSE, ...)}
 
 \arguments{
-  \item{x}{ An object of S3 class \code{"halflife"} (\link{biexp} and \link{lee})}
+  \item{x}{ An object of S3 class \code{"halflife"} (\link{biexp} and \link{lee}).}
   \item{xlab}{ A label for the x axis.}
   \item{ylab}{ A label for the y axis.}
   \item{main}{ A main title for the plot.}
