@@ -117,7 +117,7 @@ packageDescription("PK")$Version), "********** \n")
         intern$ran <- runif(nrow(intern))
         intern <- intern[order(intern$time, intern$ran),]
         intern$group <- data$group
-        temp <- auc(data=intern,nsample=0)
+        temp <- auc.ssd(data=intern,nsample=0)
         perm.dist[1,i] <- (temp$est[1,1]-theta)/temp$CIs[1,2]
       }
       switch(alternative, 

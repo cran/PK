@@ -1,0 +1,45 @@
+---------------------PK NEWS-------------------------------------------
+
+PK is an R package for inference for PK parameters in complete and 
+incomplete data designs based on non-compartmental methods.  
+
+Question or suggestions about the package can be send to
+
+   jaki.thomas@gmail.com
+or
+   martin_wolfsegger@baxter.com
+
+--------------------CHANGE LOG--------------------------------------------
+Version 1.2-1
+
+  o Bug in nca.ssd fixed
+
+  o Default option for method lee changed to ols
+
+  o Functionality to create plots by group included
+
+  o Some formating changes in the print/summary functions
+
+  o Bug in print.PKtest fixed
+
+  o Bug in test fixed
+
+--------------------------------------------------------------------------
+Version 1.2-0
+
+  o Multiple datasets included
+
+  o Bug in auc.batch fixed
+
+  o Functions can now be called using data in FDA SEND format - http://www.cdisc.org/send
+
+  o Functions est, ci and test have been included to obtain point estimates, confidence intervals and hypothesis tests
+
+  o Functions auc, eqv, nca have been aligned
+
+  o Methods to test for bioequivalence in batch designs for independent and dependent aucs have been added in functions eqv and eqv.batch
+
+  o Methods to compute PK parameters such as MRT and Clearance in serial sampling designs have been added in functions nca and nca.ssd
+
+  o Multiple references added and updated
+

@@ -5,11 +5,11 @@
 \title{Different generic functions for class PK.}
 \description{Generic functions for summarizing an object of class PK}
 \usage{
-print.PK(x, digits=max(3, getOption("digits") - 3), ...)
+print.PK(x, digits=max(3, getOption("digits") - 4), ...)
 
 summary.PK(object, ...)
 
-plot.PK(x, col=NULL, pch=NULL, main=NULL, xlab="Time", 
+plot.PK(x, bygroup=FALSE, col=NULL, pch=NULL, main=NULL, xlab="Time", 
          ylab="Concentration", ylim=NULL, xlim=NULL, add=FALSE, ...)
 
 }
@@ -18,6 +18,7 @@ plot.PK(x, col=NULL, pch=NULL, main=NULL, xlab="Time",
   \item{x}{ An output object of class PK.}
   \item{digits}{Number of significant digits to be printed.}
   \item{object}{ An output object of class PK.}
+  \item{bygroup}{ A logical value indicating whether the plot should highlight the groups.}
   \item{col}{A specification for the default plotting color (default=\code{NULL}). See \code{par} for more details.}
   \item{pch}{Either an integer specifying a symbol or a single character
           to be used as the default in plotting points (default=\code{NULL}). See \code{par} for more details.}
@@ -94,6 +95,10 @@ plot(res2, col='red', add=TRUE)
 legend(x=0, y=8, xjust=0, lty=1, col=c('black','red'), 
        legend=c('Dose of 100', 'Dose of 300'))
 
+data3 <- subset(Rats,Rats$dose==100 | Rats$dose==300)
+data3$group <- data3$dose
+res3 <- auc(data=data3,method='t', design='batch')
+plot(res3,bygroup=TRUE)
 
 ## complete data design example
 ## originally in Hand and Crowler (1996)

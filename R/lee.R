@@ -1,4 +1,4 @@
-lee <- function(conc, time, points=3, baseline=0, method=c("lad", "ols", "hub", "npr"), lt=TRUE) {
+lee <- function(conc, time, points=3, baseline=0, method=c("ols", "lad", "hub", "npr"), lt=TRUE) {
 
 	# function for lad regression
 	lad <- function(y, x) {
