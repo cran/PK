@@ -3,7 +3,7 @@
 \title{Two-phase half-life estimation by linear fitting}
 \description{Estimation of initial and terminal half-life by two-phase linear regression fitting.}
 \usage{
-lee(conc, time, points=3, baseline=0, method=c("lad", "ols", "hub", "npr"), 
+lee(conc, time, points=3, baseline=0, method=c("ols", "lad", "hub", "npr"), 
      lt=TRUE) 	     
 }
 
@@ -12,7 +12,7 @@ lee(conc, time, points=3, baseline=0, method=c("lad", "ols", "hub", "npr"),
   \item{time}{ Time points of concentration assessment. }
   \item{points}{ Minimum number of data points in the terminal phase (default=\code{3}). }
   \item{baseline}{ Pre-dosing value (default=\code{0}). }
-  \item{method}{ Method of model fitting (default=\code{lad}). } 
+  \item{method}{ Method of model fitting (default=\code{ols}). } 
   \item{lt}{ Logical value indicating whether requesting a longer terminal than initial half-life (default=\code{TRUE}).} 
 }
 

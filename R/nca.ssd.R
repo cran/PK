@@ -32,6 +32,7 @@ nca.ssd <- function(conc, time, n.tail=3, dose=0, method=c("z", "boott"), conf.l
 
     # means and variances of concentrations
     x <- conc
+    x[x==0] <- 1E-256
     xq <- as.vector(tapply(x, time, mean))	
 					
     # log transformed values	
@@ -44,7 +45,7 @@ nca.ssd <- function(conc, time, n.tail=3, dose=0, method=c("z", "boott"), conf.l
     a <- c(rep(NA, k), t[i]-mean(t[i]))			
     u <- c(rep(NA, k), a[i]/sum(a[i]^2))	
     lambda <- sum(u[i]*yq[i])*(-1)
-		
+	
     # define index for vectorizations
     u <- u[!is.na(u)]
     i <- c(1:(J-1))
@@ -178,8 +179,8 @@ nca.ssd <- function(conc, time, n.tail=3, dose=0, method=c("z", "boott"), conf.l
   }
 
   r.names <- c('AUC to tlast', 'AUC to infinity', 'AUMC to infinity', 'Mean residence time', 'non-compartmental half-life', 'Clearance', 'Volume of distribution at steady state')
+  rownames(res) <- paste(conf.level*100,'% CI for the ', rep(r.names,each=length(levels(res$method))), ' using a ', sort(levels(res$method),decreasing=TRUE),' distribution', sep='')
 
-  rownames(res) <- paste(conf.level*100,'% CI for the ', rep(r.names,each=length(levels(res$method))), ' using a ', levels(res$method),' distribution', sep='')
   if(!any(method=='z')){
     res <- res[seq(2,14,2),]
   }
