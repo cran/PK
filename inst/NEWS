@@ -10,9 +10,22 @@ or
    martin_wolfsegger@baxter.com
 
 --------------------CHANGE LOG--------------------------------------------
-Version 1.2-1
+Version 1.2-2
 
-  o Bug in nca.ssd fixed
+  o A repeated dose toxicity dataset included
+
+  o Help on nca function expanded
+
+  o A bug in the print function fixed
+
+  o auc.complete updated to handle individual AUCs
+
+  o Additional example in help for auc.complete included
+
+  o Function nca.complete included
+
+--------------------------------------------------------------------------
+Version 1.2-1
 
   o Default option for method lee changed to ols
 

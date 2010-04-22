@@ -2,7 +2,7 @@ nca <- function(conc, time, n.tail=3, dose=0, method=c("z", "boott"), conf.level
   if(missing(design)) {stop("A design needs to be specified")}
   design <- match.arg(design)
   if(design=='complete'){
-    print('Complete data design currently not implemented')
+    nca.complete(conc, time, n.tail=n.tail, dose=dose, method=method, conf.level=conf.level, nsample=nsample, data)
   }else{
     if(design=='batch'){
       print('Batch design currently not implemented')

@@ -65,6 +65,8 @@ The function calculates point and interval estimates for AUC (from 0 to the last
 \references{
 Bailer A. J. (1988). Testing for the equality of area under the curves when using destructive measurement techniques. \emph{Journal of Pharmacokinetics and Biopharmaceutics}, 16(3):303-309. \cr\cr
 
+Gibaldi M. and Perrier D. (1982). \emph{Pharmacokinetics}. Marcel Dekker, New York and Basel.\cr\cr
+
 Holder D. J., Hsuan F., Dixit R. and Soper K. (1999). A method for estimating and testing area under the curve in serial sacrifice, batch, and complete data designs. \emph{Journal of Biopharmaceutical Statistics}, 9(3):451-464.\cr\cr
 
 Jaki T. and Wolfsegger M. J. (2009). A theoretical framework for estimation of AUCs in complete and incomplete sampling designs. \emph{Statistics in Biopharmaceutical Research}, 1(2):176-184. \cr\cr
@@ -81,6 +83,7 @@ Wolfsegger M. J. and Jaki T. (2009) Assessing systemic drug exposure in repeated
 \author{Thomas Jaki and Martin J. Wolfsegger}
 
 \examples{
+#### serial sampling design:
 ## example from Bailer (1988)
 time <- c(rep(0,4), rep(1.5,4), rep(3,4), rep(5,4), rep(8,4))
 grp1 <- c(0.0658, 0.0320, 0.0338, 0.0438, 0.0059, 0.0030, 0.0084,
@@ -150,6 +153,7 @@ set.seed(260151)
 auc(conc=data$concadj, time=data$time, group=data$dose, method='boott',
     strata=data$sex, design='ssd', nsample=500)
 
+#### batch design:
 ## a batch design example from Holder et al. (1999).
 data(Rats)
 data <- subset(Rats,Rats$dose==100)
@@ -201,7 +205,12 @@ names(dconc) <- names(conc)
 auc(conc=dconc, time=dtime, group=NULL, method="t", conf.level=0.90, design="batch")
 
 
-## complete data design: example
+#### complete data design:
+## example from Gibaldi and Perrier (1982, page 436) for an individual AUC
+time <- c(0, 0.165, 0.5, 1, 1.5, 3, 5, 7.5, 10)
+conc <- c(0, 65.03, 28.69, 10.04, 4.93, 2.29, 1.36, 0.71, 0.38)
+auc(conc=conc, time=time, design="complete")
+
 ## data Indometh
 require(datasets)
 Indometh$id <- as.character(Indometh$Subject)
