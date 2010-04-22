@@ -21,6 +21,11 @@ auc.complete <- function(conc, time, group=NULL, method=c("t", "z", "boott"),  a
   if(!is.null(group)){
     group <- list(batch1=unlist(group))
   }
+
+  ## check if at least 2 subjects are provided. If not make sure that bootstrap method is not used.
+  if((table(time)[1]==1 & is.null(group)) || (table(time)[1]==2 & length(unique(group))==2) ) {
+    method <- "t"
+  }
   res <- auc.batch(conc=conc, time=time, group=group, method=method, alternative=alternative, conf.level=conf.level, nsample=nsample)
   res$design <- "complete"
   return(res)

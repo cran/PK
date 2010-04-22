@@ -5,7 +5,7 @@ citEntry(entry="Manual",
          author = personList(person(first="Thomas", last="Jaki"),
 			person(first="Martin", last="Wolfsegger")),
          year = "2010",
-         note = "R package version 1.2-1",
+         note = "R package version 1.2-0",
          url = "http://CRAN.R-project.org/package=PK",         
          textVersion = paste("Jaki T and Wolfsegger MJ (2010) PK: Basic Non-Compartmental Pharmacokinetics. Unpublished.")
          )

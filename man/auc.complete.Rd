@@ -41,12 +41,19 @@ If \code{data} is specified the variable names \code{conc}, \code{time} and \cod
 }
 
 \references{
-Cawello W. (2003). \emph{Parameters for Compartment-free Pharmacokinetics. Standardisation of Study Design, Data Analysis and Reporting}. Shaker Verlag, Aachen. \cr 
+Cawello W. (2003). \emph{Parameters for Compartment-free Pharmacokinetics. Standardisation of Study Design, Data Analysis and Reporting}. Shaker Verlag, Aachen. \cr\cr
+
+Gibaldi M. and Perrier D. (1982). \emph{Pharmacokinetics}. Marcel Dekker, New York and Basel.\cr
 }
 
 \author{Thomas Jaki and Martin Wolfsegger}
 
 \examples{
+## example from Gibaldi and Perrier (1982, page 436) for an individual AUC
+time <- c(0, 0.165, 0.5, 1, 1.5, 3, 5, 7.5, 10)
+conc <- c(0, 65.03, 28.69, 10.04, 4.93, 2.29, 1.36, 0.71, 0.38)
+auc.complete(conc=conc, time=time)
+
 ## dataset Indometh of package datasets
 ## calculate individual AUCs
 require(datasets)
@@ -56,8 +63,7 @@ colnames(res) <- c('id', 'auc')
 for(i in unique(Indometh$Subject)){
    temp <- subset(Indometh, i==Subject)
    res[row, 1] <- i
-   # NOTE: information messages are suppressed 
-   res[row, 2] <- auc.complete(data=temp[,c("conc","time")], method="t")$est[1,1]
+   res[row, 2] <- auc.complete(data=temp[,c("conc","time")])$est[1,1]
    row <- row + 1
 }
 print(res)
@@ -85,7 +91,7 @@ Indometh <- Indometh[order(Indometh$time),]
 auc.complete(conc=Indometh$conc, time=Indometh$time)
 
 
-## example for comparing AUCs assessed in a repeated complete data design 
+## example for comparing AUCs assessed in a repeated complete data design
 ## (dataset: Glucose)
 ## calculate individual AUCs
 data(Glucose)
@@ -93,16 +99,15 @@ res <- data.frame(matrix(nrow=length(unique(Glucose$id))*2, ncol=3))
 colnames(res) <- c('id', 'date', 'auc')
 row <- 1
 for(i in unique(Glucose$id)){
-   for(j in unique(Glucose$date)){
-      temp <- subset(Glucose, id==i & date==j)
-      res[row, c(1,2)] <- c(i,j)
-      # NOTE: information messages are suppressed 
-      res[row, 3] <- auc.complete(data=temp[,c("conc","time")],method="t")$est[1,1]
-      row <- row + 1      
-   }
-}     
+  for(j in unique(Glucose$date)){
+     temp <- subset(Glucose, id==i & date==j)
+     res[row, c(1,2)] <- c(i,j)
+     res[row, 3] <- auc.complete(data=temp[,c("conc","time")])$est[1,1]
+     row <- row + 1
+  }
+}
 res <- res[order(res$id, res$date),]
-print(res) 
+print(res)
 
 # assuming log-normally distributed AUCs
 # geometric means and corresponding two-sided CIs per date           

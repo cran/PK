@@ -47,13 +47,22 @@ print.PK <- function (x, digits=max(3, getOption("digits") - 4), ...) {
   }
 
   for(m in unique(x$CIs[,'method'])){
-  res <- data.frame(format(round(estimator(x, se = TRUE),digits=digits), digits=digits, 
-                    scientific=FALSE, nsmall=min(digits,2)), 
-           ci = paste("(",format(round(x$CIs[x$CIs[,'method']==m, "lower"],digits=digits), digits = digits,
-                scientific=FALSE, nsmall=min(digits,2)), ";",
-           format(round(x$CIs[x$CIs[,'method']==m, "upper"],digits=digits), digits = digits, scientific=FALSE, 
-           nsmall=min(digits,2)), ")", sep = ""))
+  if(is.na(x$CIs[1,"stderr"])) {
+    res <- data.frame(format(round(estimator(x, se = FALSE),digits=digits), digits=digits, 
+                      scientific=FALSE, nsmall=min(digits,2)), se=rep(NA,nrow(x$CIs)),
+             ci = paste("(",format(round(x$CIs[x$CIs[,'method']==m, "lower"],digits=digits), digits = digits,
+                  scientific=FALSE, nsmall=min(digits,2)), ";",
+             format(round(x$CIs[x$CIs[,'method']==m, "upper"],digits=digits), digits = digits, scientific=FALSE, 
+             nsmall=min(digits,2)), ")", sep = ""))
+  }else{
+    res <- data.frame(format(round(estimator(x, se = TRUE),digits=digits), digits=digits, 
+                      scientific=FALSE, nsmall=min(digits,2)), 
+             ci = paste("(",format(round(x$CIs[x$CIs[,'method']==m, "lower"],digits=digits), digits = digits,
+                  scientific=FALSE, nsmall=min(digits,2)), ";",
+             format(round(x$CIs[x$CIs[,'method']==m, "upper"],digits=digits), digits = digits, scientific=FALSE, 
+             nsmall=min(digits,2)), ")", sep = ""))
 
+  }
     colnames(res) <- c("Estimate", "SE", paste(x$conf.level * 100,  "% ", m, "-CI", sep = ""))
     print(res); cat("\n")
   }   
@@ -289,7 +298,7 @@ print.PKtest<-function(x,hyp=FALSE,...){
 
   print(out)
 
-  cat('\n\n* indicates a parameter less than ',1-x$conf.level,' and so one can reject\nthe corresponding null hypothesis at a significance level of ',x$conf.level,'.\n\n',sep='')
+  cat('\n\n* indicates a parameter less than ',1-x$conf.level,' and so one can reject\nthe corresponding null hypothesis at a significance level of ',1-x$conf.level,'.\n\n',sep='')
  
 }
 
