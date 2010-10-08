@@ -56,6 +56,7 @@ packageDescription("PK")$Version), "********** \n")
 # function to modify a dataframe into the list format for batch design
 .formattobatch <- function(data){
 
+  data <- data[order(data$time, data$id),]
   J <- length(unique(data$time))
   n <- length(unique(data$id))
   concmat<- matrix(NA,nrow=J,ncol=n)
