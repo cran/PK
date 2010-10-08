@@ -1,12 +1,13 @@
 citHeader("To cite package PK in publications use:")
 
-citEntry(entry="Manual",
-         title = "PK: Basic Non-Compartmental Pharmacokinetics",
+citEntry(entry="Article",
+         title = "Estimation of pharmacokinetic parameters with the R package PK",
          author = personList(person(first="Thomas", last="Jaki"),
 			person(first="Martin", last="Wolfsegger")),
          year = "2010",
-         note = "R package version 1.2-0",
+         journal = "Pharmaceutical statistics",
+         note = "Published online ahead of print. DOI: 10.1002/pst.449",
          url = "http://CRAN.R-project.org/package=PK",         
-         textVersion = paste("Jaki T and Wolfsegger MJ (2010) PK: Basic Non-Compartmental Pharmacokinetics. Unpublished.")
+         textVersion = paste("Jaki T and Wolfsegger MJ (2010) Estimation of pharmacokinetic parameters with the R package PK. Pharmaceutical Statistics. Published online ahead of print. DOI: 10.1002/pst.449")
          )
 

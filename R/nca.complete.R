@@ -23,11 +23,13 @@ nca.complete <- function(conc, time, n.tail=3, dose=0, method=c("z", "boott"), c
     ests[,i] <- res$est
   }
   
+
   ## return geometric mean of parameters + message
   if(n>1) {
     message("Note that the geometric mean of the individual parameters is reported.\n") 
   }
-  res$est <- apply(ests,1,prod)^(1/n)
+  res$est <- matrix(apply(ests,1,prod)^(1/n),ncol=1)
+  rownames(res$est) <- c('AUC to tlast', 'AUC to infinity', 'AUMC to infinity', 'Mean residence time', 'non-compartmental half-life', 'Clearance', 'Volume of distribution at steady state') 
   res$CIs[,"est"]<-  apply(ests,1,prod)^(1/n)
   ## set CIs NA as complete data design is used
   res$CIs[,c("lower","upper")]<- NA
