@@ -1,13 +1,12 @@
----------------------PK NEWS-------------------------------------------
+---------------------PK NEWS----------------------------------------------
 
 PK is an R package for inference for PK parameters in complete and 
-incomplete data designs based on non-compartmental methods.  
+incomplete data designs based on non-compartmental methods. If you are 
+using the package, please cite it as 
 
-A brief introduction to the package and some examples are provided in
-
-Jaki T and Wolfsegger MJ (2010) Estimation of pharmacokinetic 
-parameters with the R package PK. Pharmaceutical Statistics. 
-Published online ahead of print. DOI: 10.1002/pst.449
+Jaki T and Wolfsegger MJ (2011) Estimation of pharmacokinetic parameters 
+with the R package PK. Pharmaceutical Statistics. Vol 10(No 3), 294-288. 
+DOI: 10.1002/pst.449"
 
 Question or suggestions about the package can be send to
 
@@ -16,12 +15,19 @@ or
    martin_wolfsegger@baxter.com
 
 --------------------CHANGE LOG--------------------------------------------
-Version 1.2-3
+Version 1.2-4
+
+  o The help file for the function nca has been corrected
 
   o Citation information updated
 
+--------------------------------------------------------------------------
+Version 1.2-3
+
   o A bug in an internal function to handle the data argument in batch 
     designs fixed
+
+  o Citation information updated
 
   o A bug in the nca.complete function fixed
 
@@ -62,19 +68,15 @@ Version 1.2-0
 
   o Bug in auc.batch fixed
 
-  o Functions can now be called using data in FDA SEND format - 
-    http://www.cdisc.org/send
+  o Functions can now be called using data in FDA SEND format - http://www.cdisc.org/send
 
-  o Functions est, ci and test have been included to obtain point 
-    estimates, confidence intervals and hypothesis tests
+  o Functions est, ci and test have been included to obtain point estimates, confidence intervals and hypothesis tests
 
   o Functions auc, eqv, nca have been aligned
 
-  o Methods to test for bioequivalence in batch designs for independent 
-    and dependent aucs have been added in functions eqv and eqv.batch
+  o Methods to test for bioequivalence in batch designs for independent and dependent aucs have been added in functions eqv and eqv.batch
 
-  o Methods to compute PK parameters such as MRT and Clearance in serial 
-    sampling designs have been added in functions nca and nca.ssd
+  o Methods to compute PK parameters such as MRT and Clearance in serial sampling designs have been added in functions nca and nca.ssd
 
   o Multiple references added and updated
 
