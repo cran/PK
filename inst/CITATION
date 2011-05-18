@@ -2,12 +2,15 @@ citHeader("To cite package PK in publications use:")
 
 citEntry(entry="Article",
          title = "Estimation of pharmacokinetic parameters with the R package PK",
-         author = personList(person(first="Thomas", last="Jaki"),
-			person(first="Martin", last="Wolfsegger")),
-         year = "2010",
+         author = personList(person(given="Thomas", family="Jaki"),
+			person(given="Martin", family="Wolfsegger")),
+         year = "2011",
          journal = "Pharmaceutical statistics",
-         note = "Published online ahead of print. DOI: 10.1002/pst.449",
+         volume = "10",
+         number = "3",
+         pages = "284-288",
+         note = "DOI: 10.1002/pst.449",
          url = "http://CRAN.R-project.org/package=PK",         
-         textVersion = paste("Jaki T and Wolfsegger MJ (2010) Estimation of pharmacokinetic parameters with the R package PK. Pharmaceutical Statistics. Published online ahead of print. DOI: 10.1002/pst.449")
+         textVersion = paste("Jaki T and Wolfsegger MJ (2011) Estimation of pharmacokinetic parameters with the R package PK. Pharmaceutical Statistics. Vol 10(No 3), 294-288. DOI: 10.1002/pst.449")
          )
 

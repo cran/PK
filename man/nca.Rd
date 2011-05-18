@@ -41,8 +41,8 @@ Two different confidence intervals are computed: an asymptotic confidence interv
 If \code{data} is specified the variable names \code{conc} and \code{time} are required and represent the corresponding variables.\cr\cr
 
 Note that some estimators as provided assume IV bolus administration. If an oral administration is used\cr
-- The clearance needs to be adjusted by the bioavailability, F. This can be achieved by either dividing the obtained estimator by F or adjusting the dose parameter accordingly. \cr
-- The MRT corresponds to the mean transit time (MTT) which is the sum of MRT and mean absorption time (MAT).\cr
+- The clearance needs to be adjusted by the bioavailability, f. This can be achieved by either multiplying the obtained estimator by f or adjusting the dose parameter accordingly. \cr
+- The MRT estimate produced corresponds to the mean transit time (MTT) which is the sum of MRT and mean absorption time (MAT).\cr
 - HL and Vss are functions of the MRT and hence they will not be valid under oral administration.
 }
 
