@@ -7,9 +7,9 @@
 \usage{
 test(obj, theta=0, method = c("t", "fieller", "z", "resample"), nsample = 1000) 
 
-print.PKtest(x,hyp=FALSE,...)
+\method{print}{PKtest}(x,hyp=FALSE,...)
 
-summary.PKtest(object,...)
+\method{summary}{PKtest}(object,...)
 }
 
 \arguments{

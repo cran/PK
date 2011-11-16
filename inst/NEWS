@@ -15,6 +15,13 @@ or
    martin_wolfsegger@baxter.com
 
 --------------------CHANGE LOG--------------------------------------------
+Version 1.2-5
+
+  o Code in biexp and lee updated
+
+  o Several examples in help files biexp and lee added 
+
+--------------------------------------------------------------------------
 Version 1.2-4
 
   o The help file for the function nca has been corrected
