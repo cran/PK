@@ -4,11 +4,11 @@
 #####
 .onAttach <- function(...)
    {
-   cat(paste(" **********   PK Version",
+   packageStartupMessage(paste(" **********   PK Version",
 packageDescription("PK")$Version), "********** \n")
   # cat(paste("For more on PK see the vignette.\n"))
-   cat("Type PKNews() to see new features/changes/bug fixes.\n")
-   if(as.numeric(R.Version()$major) >= 2 & as.numeric(R.Version()$minor) < 10) {cat(paste("The help functions for this package might not work properly. Please upgrade R to Version 2.10 or above to fix this problem.\n"))}
+   packageStartupMessage("Type PKNews() to see new features/changes/bug fixes.\n")
+   if(as.numeric(R.Version()$major) >= 2 & as.numeric(R.Version()$minor) < 10) {packageStartupMessage(paste("The help functions for this package might not work properly. Please upgrade R to Version 2.10 or above to fix this problem.\n"))}
    }
 
 
@@ -47,10 +47,22 @@ packageDescription("PK")$Version), "********** \n")
 # Fieller confidence interval for dependent variables
 .fieller.general <- function(auc1, auc2, var1, var2, covar, df, conf.level=0.90){
 
-  alpha <- 1-conf.level  if(is.na(df)){    c <- qnorm(1-alpha/2)  }else{    c <- qt(1-alpha/2, df=df)  }
-  k <- c^2 * var2/auc2^2  delta <- auc1/auc2  
-  part1 <- delta + (k/(1-k))*(delta - covar/var2)    part2 <- c/(auc2*(1-k)) * sqrt(var1 - 2*delta*covar + delta^2*var2 - k * (var1 - (covar^2 / var2)))
-    upper <- part1 + part2  lower <- part1 - part2    res <- c(lower, upper)  return(res)
+  alpha <- 1-conf.level
+  if(is.na(df)){
+    c <- qnorm(1-alpha/2)
+  }else{
+    c <- qt(1-alpha/2, df=df)
+  }
+
+  k <- c^2 * var2/auc2^2
+  delta <- auc1/auc2  
+  part1 <- delta + (k/(1-k))*(delta - covar/var2)  
+  part2 <- c/(auc2*(1-k)) * sqrt(var1 - 2*delta*covar + delta^2*var2 - k * (var1 - (covar^2 / var2)))
+  
+  upper <- part1 + part2
+  lower <- part1 - part2  
+  res <- c(lower, upper)
+  return(res)
 }
 
 # function to modify a dataframe into the list format for batch design

@@ -5,11 +5,11 @@
 \title{Different generic functions for class PK.}
 \description{Generic functions for summarizing an object of class PK}
 \usage{
-print.PK(x, digits=max(3, getOption("digits") - 4), ...)
+\method{print}{PK}(x, digits=max(3, getOption("digits") - 4), ...)
 
-summary.PK(object, ...)
+\method{summary}{PK}(object, ...)
 
-plot.PK(x, bygroup=FALSE, col=NULL, pch=NULL, main=NULL, xlab="Time", 
+\method{plot}{PK}(x, bygroup=FALSE, col=NULL, pch=NULL, main=NULL, xlab="Time", 
          ylab="Concentration", ylim=NULL, xlim=NULL, add=FALSE, ...)
 
 }
