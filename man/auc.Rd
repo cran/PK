@@ -34,13 +34,13 @@ auc.batch(conc, time, group=NULL, method=c("t", "z", "boott"),
 }
 
 \details{
-Calculation of confidence intervals for an AUC (from 0 to the last time point) or for the difference between two AUCs for serial sampling, batch and complete data designs. In a serial sampling design only one measurement is available per subject, while in a batch design multiple time points are measured for each subject. In a complete data design measurements are taken for all subjects at all time points. The AUC (from 0 to the last time point) is calculated using the linear trapezoidal rule on the arithmetic means at the different time points.\cr\cr
+Calculation of confidence intervals for an AUC (from 0 to the last time point) or for the difference between two AUCs for serial sampling, batch and complete data designs. In a serial sampling design only one measurement is available per subject, while in a batch design multiple (but not necessarily all) time points are measured for each subject. In a complete data design measurements are taken for all subjects at all time points. The AUC (from 0 to the last time point) is calculated using the linear trapezoidal rule on the arithmetic means at the different time points.\cr\cr
 
 If group=NULL a confidence interval for an AUC is calculated. If group specifies a factor variable with exactly two levels, a confidence interval for the difference between two independent AUCs is calculated. To obtain confidence intervals for dependent AUCs simply use the difference in concentrations for \code{conc}. See the example below.\cr\cr
 
-The \code{t} method uses the critical value from a t-distribution with Satterthwaite's approximation (Satterthwaite, 1946) to the degrees of freedom for calculation of confidence intervals as presented in Tang-Liu and Burke (1988), Nedelman et al (1995), Holder et al (1999) and in Jaki and Wolfsegger (2009). The \code{z} method uses the critical value from a normal distribution for calculation of confidence intervals as presented in Bailer (1988) or in Jaki and Wolfsegger (2009). The \code{boott} method uses bootstrap-\emph{t} confidence intervals as presented in Jaki and Wolfsegger (2009). Using \code{boott} an additional strata variable for bootstrapping can be specified in the case of serial sampling. \cr\cr
+The \code{t} method uses the critical value from a t-distribution with Satterthwaite's approximation (Satterthwaite, 1946) to the degrees of freedom for calculation of confidence intervals as presented in Tang-Liu and Burke (1988), Nedelman et al (1995), Holder et al (1999), Jaki and Wolfsegger (2009) and Jaki and Wolfsegger (2012). The \code{z} method uses the critical value from a normal distribution for calculation of confidence intervals as presented in Bailer (1988) or in Jaki and Wolfsegger (2009). The \code{boott} method uses bootstrap-\emph{t} confidence intervals as presented in Jaki and Wolfsegger (2009). Using \code{boott} an additional strata variable for bootstrapping can be specified in the case of serial sampling. \cr\cr
 
-For serial sampling designs missing data are omitted and unequal sample sizes per time point are allowed. For batch designs missing values are not permitted and equal sample size per time point is required.\cr\cr
+For serial sampling designs missing data are omitted and unequal sample sizes per time point are allowed. For batch designs missing values are not permitted and at least two subjects are required per batch.\cr\cr
 
 If \code{data} is specified the variable names \code{conc}, \code{time} and \code{group} are required and represent the corresponding variables. If \code{design} is \code{batch} an additional variable \code{id} is required to identify the subject.\cr\cr
 
@@ -68,6 +68,8 @@ Bailer A. J. (1988). Testing for the equality of area under the curves when usin
 Gibaldi M. and Perrier D. (1982). \emph{Pharmacokinetics}. Marcel Dekker, New York and Basel.\cr\cr
 
 Holder D. J., Hsuan F., Dixit R. and Soper K. (1999). A method for estimating and testing area under the curve in serial sacrifice, batch, and complete data designs. \emph{Journal of Biopharmaceutical Statistics}, 9(3):451-464.\cr\cr
+
+Jaki T. and Wolfsegger M. J. (2012). Non-compartmental estimation of pharmacokinetic parameters for flexible sampling designs. \emph{Statistics in Medicine}, 31(11-12):1059-1073. \cr\cr
 
 Jaki T. and Wolfsegger M. J. (2009). A theoretical framework for estimation of AUCs in complete and incomplete sampling designs. \emph{Statistics in Biopharmaceutical Research}, 1(2):176-184. \cr\cr
 
@@ -204,6 +206,18 @@ names(dconc) <- names(conc)
 
 auc(conc=dconc, time=dtime, group=NULL, method="t", conf.level=0.90, design="batch")
 
+## example with overlapping batches (Treatment A in Example of Jaki & Wolfsegger 2012)
+conc <- list(batch1=c(0,0,0,0, 69.7,37.2,213,64.1,  167,306,799,406, 602,758,987,627,
+                      1023,1124,1301,880, 1388,1374,1756,1120, 1481,1129,1665,1598,
+                      1346,1043,1529,1481, 658,576,772,851, 336,325,461,492, 
+                      84,75.9,82.6,116),
+             batch2=c(0,0,0, 29.2,55.9,112.2, 145,153,169, 282,420,532, 727,1033,759, 
+                      1360,1388,1425, 1939,1279,1318, 1614,1205,1542, 1238,1113,1386,
+                      648,770,786, 392,438,511, 77.3,90.1,97.9))
+time <- list(batch1=rep(c(0,0.5,0.75,1,1.5,2,3,4,8,12,24),each=4),
+             batch2=rep(c(0,0.25,0.5,0.75,1,1.5,2,3,4,8,12,24),each=3))
+
+auc.batch(conc,time,method=c("t","z"),conf.level=0.9)
 
 #### complete data design:
 ## example from Gibaldi and Perrier (1982, page 436) for an individual AUC

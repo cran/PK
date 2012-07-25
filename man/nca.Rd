@@ -1,6 +1,7 @@
 \name{nca}
 \alias{nca}
 \alias{nca.ssd}
+\alias{nca.batch}
 \alias{nca.complete}
 \title{Estimation of various PK parameters}
 \description{Non-compartmental estimation of the area under the concentration versus time curve (AUC) to the last time point, AUC to infinity, area under the first moment curve (AUMC) to infinity, mean residence time (MRT), non-compartmental half-life, total clearance and volume of distribution at steady state.}
@@ -11,13 +12,16 @@ nca(conc, time, n.tail=3, dose=0, method=c("z", "boott"), conf.level=0.95,
 nca.ssd(conc, time, n.tail=3, dose=0, method=c("z", "boott"), 
          conf.level=0.95, nsample=1000, data)
 
+nca.batch(conc, time, n.tail=3, dose=0, method=c("z", "boott"), 
+         conf.level=0.95, nsample=1000, data)
+
 nca.complete(conc, time, n.tail=3, dose=0, method=c("z", "boott"), 
          conf.level=0.95, nsample=1000, data)
 }
 
 \arguments{
-  \item{conc}{ Levels of concentrations as a vector.}
-  \item{time}{ Time points of concentration assessment as a vector. One time point for each concentration measured needs to be specified.}
+  \item{conc}{ Levels of concentrations. For batch designs a list is required, while a vector is expected otherwise.}
+  \item{time}{ Time points of concentration assessment. For batch designs a list is required, while a vector is expected otherwise. One time point for each concentration measured needs to be specified.}
   \item{n.tail}{ Number of last data points used for tail area correction (default=\code{3}). }
   \item{dose}{ Dose administered as an IV bolus (default=\code{0}).}
   \item{method}{ A character string specifying the method for calculation of confidence intervals (default=\code{c("z", "boott")}). }
@@ -30,9 +34,9 @@ nca.complete(conc, time, n.tail=3, dose=0, method=c("z", "boott"),
 \details{
 Estimation of the area under the concentration versus time curve from zero to the last time point (AUC 0-tlast), total area under the concentration versus time curve from zero to infinity (AUC 0-Inf), area under the first moment curve for zero to infinity (AUMC 0-Inf), mean residence time (MRT), non-compartmental half-life (HL), total clearance (CL) and volume of distribution at steady state (Vss). In a serial sampling design only one measurement is available per subject at a specific time point, while in a batch design multiple time points are measured for each subject. In a complete data design measurements are taken for all subjects at all time points.\cr\cr 
 
-Currently only the serial sampling design is fully implemented. Equal sample size per time point and a constant coefficient of variation at the last \code{n.tail} time points are assumed.\cr\cr
+A constant coefficient of variation at the last \code{n.tail} time points is assumed.\cr\cr
 
-For complete data designs only point estimates are provided. The parameters \code{method}, \code{conf.level} and \code{nsample=1000} are therefore not used. If data for only one subject is provided, the parameters are estimated for this subject while the geometric mean of the estimated parameters is found for multiple subjects (see Cawello, 2003, p. 114). \cr\cr
+The use of the standard errors and confidence intervals for the MRT and Vss from batch designs is depreciated due to very slow asymptotic that usually lead to severe undercoverage. For complete data designs only point estimates are provided. The parameters \code{method}, \code{conf.level} and \code{nsample=1000} are therefore not used. If data for only one subject is provided, the parameters are estimated for this subject while the geometric mean of the estimated parameters is found for multiple subjects (see Cawello, 2003, p. 114). \cr\cr
 
 The AUC 0-tlast is calculated using the linear trapezoidal rule on the arithmetic means at the different time points while the extrapolation necessary for the AUC 0-Inf and AUMC 0-Inf is achieved assuming an exponential decay on the last \code{n.tail} time points. The other parameters are functions of these PK parameters and of the dosage and are defined as in Wolfsegger and Jaki (2009).\cr\cr
 
@@ -65,6 +69,8 @@ design, data analysis and reporting}. Shaker Verlag, Aachen.\cr\cr
 
 Gibaldi M. and Perrier D. (1982). \emph{Pharmacokinetics}. Marcel Dekker, New York and Basel.\cr\cr
 
+Jaki T. and Wolfsegger M. J. (2012). Non-compartmental estimation of pharmacokinetic parameters for flexible sampling designs. \emph{Statistics in Medicine}, 31(11-12):1059-1073. \cr\cr
+
 Wolfsegger M. J. and Jaki T. (2009). Non-compartmental Estimation of Pharmacokinetic Parameters in Serial Sampling Designs. \emph{Journal of Pharmacokinetics and Pharmacodynamics}, 36(5):479-494. \cr	
 }
 
@@ -89,6 +95,34 @@ nca.ssd(conc=conc, time=time, n.tail=4, dose=200, method=c("z","boott"),
 data <- data.frame(conc=conc, time=time)
 nca(data=data, n.tail=4, dose=200, method="z", 
      conf.level=0.95, design="ssd")
+
+
+
+#### batch design:
+## a batch design example from Holder et al. (1999).
+data(Rats)
+data <- subset(Rats,Rats$dose==100)
+
+# using the wrapper function
+nca(data=data, n.tail=4, dose=100, method="z", 
+     conf.level=0.95, design="batch")
+# direct call
+nca.batch(data=data, n.tail=4, dose=100, method="z", 
+     conf.level=0.95)
+
+## example with overlapping batches (Treatment A in Example of Jaki & Wolfsegger 2012)
+conc <- list(batch1=c(0,0,0,0, 69.7,37.2,213,64.1,  167,306,799,406, 602,758,987,627,
+                      1023,1124,1301,880, 1388,1374,1756,1120, 1481,1129,1665,1598,
+                      1346,1043,1529,1481, 658,576,772,851, 336,325,461,492, 
+                      84,75.9,82.6,116),
+             batch2=c(0,0,0, 29.2,55.9,112.2, 145,153,169, 282,420,532, 727,1033,759, 
+                      1360,1388,1425, 1939,1279,1318, 1614,1205,1542, 1238,1113,1386,
+                      648,770,786, 392,438,511, 77.3,90.1,97.9))
+time <- list(batch1=rep(c(0,0.5,0.75,1,1.5,2,3,4,8,12,24),each=4),
+             batch2=rep(c(0,0.25,0.5,0.75,1,1.5,2,3,4,8,12,24),each=3))
+
+nca.batch(conc,time,method="z",n.tail=4,dose=80)
+
 
 #### complete data design
 ## example from Gibaldi and Perrier (1982, page 436) for individual PK parameters

@@ -103,20 +103,20 @@ eqv.batch <- function(conc, time, group, dependent=FALSE, method=c("fieller", "z
 
   auc1 <- auc.batch(conc1, time1, method="t",  alternative="two.sided", conf.level=conf.level, nsample=0)
   auc2 <- auc.batch(conc2, time2, method="t",  alternative="two.sided", conf.level=conf.level, nsample=0)
-
-  #compute difference of AUCs 
-  dconc <- NULL
-  for(i in 1:length(time)){
-    dconc[[i]] <- conc1[[i]]-conc2[[i]]
-  }
-  names(dconc) <- names(conc)
-  
+ 
   a1 <- auc1$CIs[1,1]
   a2 <- auc2$CIs[1,1]
   est <- a1/a2
   v11 <- auc1$CIs[1,2]^2
   v22 <- auc2$CIs[1,2]^2
+
   if(dependent){
+    #compute difference of AUCs 
+    dconc <- NULL
+    for(i in 1:length(time)){
+      dconc[[i]] <- conc1[[i]]-conc2[[i]]
+    }
+    names(dconc) <- names(conc)
     dauc <- auc.batch(conc=dconc, time=time1, group=NULL, method="t",  alternative="two.sided", conf.level=conf.level, nsample=0)
     v12 <- 0.5*(v11+v22-dauc$CIs[1,2]^2)
     asym.var <- v11/a2^2+v22*a1^2/a2^4-2*v12*a1/a2^3
