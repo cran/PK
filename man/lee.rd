@@ -106,7 +106,7 @@ conc <- c(20.34, 3683, 884.7, 481.1, 215.6, 114, 95.8, 87.89, 60.19, 60.17, 34.8
 data <- data.frame(conc,time)
 
 ## naive adjustment for endogenous concentration by subtraction of pre-value
-## see also \code{\link{biexp}} for modelling approaches  
+## see also help for function biexp for modelling approaches  
 data$concadj <- data$conc - data$conc[1]
 data$concadj[min(which(data$concadj<0)):nrow(data)] <- NA
 res6 <- lee(conc=data$concadj[-1], time=data$time[-1]) 

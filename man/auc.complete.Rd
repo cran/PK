@@ -88,7 +88,7 @@ set.seed(300874)
 Indometh$id <- as.character(Indometh$Subject)
 Indometh <- Indometh[order(Indometh$id, Indometh$time),]
 Indometh <- Indometh[order(Indometh$time),]
-auc.complete(conc=Indometh$conc, time=Indometh$time)
+auc.complete(conc=Indometh$conc, time=Indometh$time, method=c("t"))
 
 
 ## example for comparing AUCs assessed in a repeated complete data design

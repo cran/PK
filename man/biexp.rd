@@ -77,8 +77,8 @@ summary(nls(log(conc)~log(a1*exp(-b1*time) + a2*exp(-b2*time)), start=parms.log,
 
 ## different approach using weighted least squares (WLS) in nls 
 mod.ols <- nls(conc ~ a1*exp(-b1*time) + a2*exp(-b2*time), start=parms.obs)
-mod.wls1 <- nls(conc ~ a1*exp(-b1*time) + a2*exp(-b2*time), start=parms.obs, weight=predict(mod.ols)^1)
-mod.wls2 <- nls(conc ~ a1*exp(-b1*time) + a2*exp(-b2*time), start=parms.obs, weight=predict(mod.ols)^2)
+mod.wls1 <- nls(conc ~ a1*exp(-b1*time) + a2*exp(-b2*time), start=parms.obs, weight=1/predict(mod.ols)^1)
+mod.wls2 <- nls(conc ~ a1*exp(-b1*time) + a2*exp(-b2*time), start=parms.obs, weight=1/predict(mod.ols)^2)
 
 split.screen(c(2,2))
 screen(1)
@@ -202,7 +202,6 @@ print(c(cls, cld, vc, vt))
 
 ## turnover model to account for endogenous baseline according to Gabrielsson and Weiner 
 ## using a biexponential (i.e. two-compartment) model parametrized in terms of clearance 
-
 
 \dontrun{require(rgenoud)
 require(deSolve)

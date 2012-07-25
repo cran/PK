@@ -84,12 +84,6 @@ summary(res)
 ## bootstrap test for bioequivalence
 # Note: This can take a few minutes
 data(Glucose)
-obj <- eqv(conc=Glucose$conc, time=Glucose$time, group=Glucose$date, 
-     dependent=TRUE, method=c("fieller"), conf.level=0.90, 
-     nsample=500, design="complete")
-
-test(obj, theta=1, method="resample", nsample=500)
-
 ## one-sided permutation test
 obj <- auc(conc=Glucose$conc, time=Glucose$time, group=Glucose$date, 
      method=c("t"), conf.level=0.90, alternative='less', 

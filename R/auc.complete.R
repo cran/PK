@@ -27,6 +27,9 @@ auc.complete <- function(conc, time, group=NULL, method=c("t", "z", "boott"),  a
     method <- "t"
   }
   res <- auc.batch(conc=conc, time=time, group=group, method=method, alternative=alternative, conf.level=conf.level, nsample=nsample)
+  if(any(res$CIs["stderr"]==0)){
+    res$CIs[c("stderr","lower","upper","df")] <- NA
+  }
   res$design <- "complete"
   return(res)
 }

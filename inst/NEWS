@@ -15,6 +15,22 @@ or
    martin_wolfsegger@baxter.com
 
 --------------------CHANGE LOG--------------------------------------------
+Version 1.3-0
+
+  o Flexible batch designs (Jaki & Wolfsegger, Statistics in Medicine 2012)
+    implemented. These designs allow the same timepoints to be used in 
+    different batches. 
+    Functions updated:  auc.batch
+    Help files updated: auc.batch, eqv.batch
+
+  o Methods to compute PK parameters such as Clearance in flexible
+    batch designs have been added in functions nca and nca.batch
+
+  o Help for nca updated
+
+  o Help for eqv.ssd, eqv.batch and eqv.complete has been merged with eqv
+
+--------------------------------------------------------------------------
 Version 1.2-5
 
   o Code in biexp and lee updated

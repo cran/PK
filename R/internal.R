@@ -98,6 +98,63 @@ packageDescription("PK")$Version), "********** \n")
 
 }
 
+# Function to convert lists to matrix with one row per subject and time
+.batchtoFDAsend<-function(conc,time,group){
+
+  ## sample size within each batch
+  ns <- unlist(lapply(time,length))/unlist(lapply(lapply(time,unique),length))
+
+  # create list of ids
+  i<-1
+  ids <- time
+
+  for (b in 1:length(conc)){
+    ids[[b]]<-rep(seq(i,cumsum(ns)[b]),length(unique(time[[b]])))
+    i<-i+ns[b]
+  }
+
+  if(!is.null(group)){
+    data<-data.frame(id=unlist(ids),time=unlist(time),conc=unlist(conc),group=unlist(group))
+  }else{
+    data<-data.frame(id=unlist(ids),time=unlist(time),conc=unlist(conc))
+  }
+  data <- data[order(data$time, data$id),]
+  return(data)
+}
+
+# function to modify a set of lists into a datamatrix and an incidence matrix
+.batchtomatrix<-function(conc,time){
+
+  ## sample size within each batch
+  ns <- unlist(lapply(time,length))/unlist(lapply(lapply(time,unique),length))
+
+  # create list of ids
+  i<-1
+  ids <- time
+
+  for (b in 1:length(conc)){
+    #sort time and conc so that same times are next to each other
+    conc[[b]] <- conc[[b]][order(time[[b]])]
+    time[[b]] <- sort(time[[b]])
+    ids[[b]]<-rep(seq(i,cumsum(ns)[b]),length(unique(time[[b]])))
+    i<-i+ns[b]
+  }
+
+  data<-data.frame(id=unlist(ids),time=unlist(time),conc=unlist(conc))
+  data <- data[order(data$time, data$id),]
+  J <- length(unique(data$time))
+  n <- length(unique(data$id))
+  concmat<- matrix(NA,nrow=J,ncol=n)
+
+  rownames(concmat) <- sort(unique(data$time))
+  colnames(concmat) <- sort(unique(data$id))
+  for(i in 1:nrow(data)){
+    concmat[paste(data[i,'time']),paste(data[i,'id'])] <- data[i,'conc']
+  }
+
+  return(concmat)
+}
+
 #obj coming from test()
 .resampling.test <- function(obj, theta, nsample=1000, alternative="two.sided"){
 
