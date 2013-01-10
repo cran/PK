@@ -190,12 +190,12 @@ points(x=newdata$time, y=predict(mod.irwls, newdata), type='l')
 ## from macro constant parametrization according to Gabrielsson and Weiner (2000) 
 parm <- coef(mod.wls)[-1]
 ## get micro constants 
-k21 <- as.real((parm[1]*parm[4]+parm[3]*parm[2])/(parm[1]+parm[3]))
-k10 <- as.real(parm[2]*parm[4] / k21)
-k12 <- as.real(parm[2]+parm[4] - k21 - k10)
+k21 <- as.double((parm[1]*parm[4]+parm[3]*parm[2])/(parm[1]+parm[3]))
+k10 <- as.double(parm[2]*parm[4] / k21)
+k12 <- as.double(parm[2]+parm[4] - k21 - k10)
 ## get cls, cld, vc, and vt 
-cls <- as.real(dose / (parm[1]/parm[2] + parm[3]/parm[4])) 
-vc <- as.real(dose / (parm[1] + parm[2]))
+cls <- as.double(dose / (parm[1]/parm[2] + parm[3]/parm[4])) 
+vc <- as.double(dose / (parm[1] + parm[2]))
 cld <- k12*vc 
 vt <- cld / k21 
 print(c(cls, cld, vc, vt))

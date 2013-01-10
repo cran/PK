@@ -71,7 +71,7 @@ print(res)
 # function to get geometric mean and corresponding CI
 gm.ci <- function(x, conf.level=0.95){
    res <- t.test(x=log(x), conf.level=conf.level)
-   out <- data.frame(gm=as.real(exp(res$estimate)), lower=exp(res$conf.int[1]), 
+   out <- data.frame(gm=as.double(exp(res$estimate)), lower=exp(res$conf.int[1]), 
                       upper=exp(res$conf.int[2]))
    return(out)
 }    
@@ -116,7 +116,7 @@ tapply(res$auc, res$date, gm.ci)
 # comparison of AUCs using ratio of geometric means and corresponding two-sided CI 
 # repeated experiment
 model <- t.test(log(auc)~date, data=res, paired=TRUE, conf.level=0.90)
-exp(as.real(model$estimate))
+exp(as.double(model$estimate))
 exp(model$conf.int)
 }
 

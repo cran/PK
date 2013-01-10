@@ -107,16 +107,16 @@ auc.ssd <- function(conc, time, group=NULL, method=c("t", "z", "boott"),  altern
     "two.sided"={},
   )
 
-  df <- rep(NA, as.real(length(lower)))
+  df <- rep(NA, as.double(length(lower)))
   if(any(method=="t")){
     if(any(method=='z')){
-      df=c(rep(NA, as.real(length(lower)-2)), v, NA)
+      df=c(rep(NA, as.double(length(lower)-2)), v, NA)
     }else{
-      df=c(rep(NA, as.real(length(lower)-1)), v)
+      df=c(rep(NA, as.double(length(lower)-1)), v)
     }
   }
   res <- NULL
-  res$est <- matrix(as.real(est),ncol=1)
+  res$est <- matrix(as.double(est),ncol=1)
   if(length(unique(group))==1){
     rownames(res$est) <- 'AUC to tlast'
   }else{

@@ -16,8 +16,8 @@ lee <- function (conc, time, points = 3, method = c("ols", "lad", "hub", "npr"),
                 }
             }
         }
-        return(list(k = as.real(k), d = as.real(d), resid = as.real(resid), 
-            mad = as.real(mad)))
+        return(list(k = as.double(k), d = as.double(d), resid = as.double(resid), 
+            mad = as.double(mad)))
     }
     hub <- function(y, x, mad = lad(y = y, x = x)$mad) {
         hubloss <- function(kd) {
@@ -29,8 +29,8 @@ lee <- function (conc, time, points = 3, method = c("ols", "lad", "hub", "npr"),
         start <- as.vector(c(lm(y ~ x)$coef[2], lm(y ~ x)$coef[1]))
         res <- optim(start, hubloss, method = "Nelder-Mead", 
             control = c(reltol = 1e-09))
-        return(list(k = as.real(res$par[1]), d = as.real(res$par[2]), 
-            resid = as.real(res$value)))
+        return(list(k = as.double(res$par[1]), d = as.double(res$par[2]), 
+            resid = as.double(res$value)))
     }
     npr <- function(y, x) {
         weighted.median <- function(w, x) {
@@ -65,12 +65,12 @@ lee <- function (conc, time, points = 3, method = c("ols", "lad", "hub", "npr"),
         d <- median(y - k * x)
         e <- y - k * x - d
         resid <- sum((rank(e) - 1/2 * (length(y) + 1)) * e)
-        return(list(k = as.real(k), d = as.real(d), resid = as.real(resid)))
+        return(list(k = as.double(k), d = as.double(d), resid = as.double(resid)))
     }
     ols <- function(y, x) {
         res <- lm(y ~ x)
-        return(list(k = as.real(res$coef[2]), d = as.real(res$coef[1]), 
-            resid = as.real(sum(res$resid * res$resid))))
+        return(list(k = as.double(res$coef[2]), d = as.double(res$coef[1]), 
+            resid = as.double(sum(res$resid * res$resid))))
     }
     method = match.arg(method)
     if (!is.vector(time) || !is.vector(conc)) {
@@ -150,7 +150,7 @@ lee <- function (conc, time, points = 3, method = c("ols", "lad", "hub", "npr"),
                   resid) {
                   final.init.model <- init.model
                   final.term.model <- term.model
-                  final.chgpt <- as.real(chgpt)
+                  final.chgpt <- as.double(chgpt)
                   resid <- sum(term.model$resid, init.model$resid)
                 }
             }
@@ -160,7 +160,7 @@ lee <- function (conc, time, points = 3, method = c("ols", "lad", "hub", "npr"),
                   resid) {
                   final.init.model <- init.model
                   final.term.model <- term.model
-                  final.chgpt <- as.real(chgpt)
+                  final.chgpt <- as.double(chgpt)
                   resid <- sum(term.model$resid, init.model$resid)
                 }
             }
@@ -171,11 +171,11 @@ lee <- function (conc, time, points = 3, method = c("ols", "lad", "hub", "npr"),
     if (is.na(init.hl) | is.na(term.hl)) {
         warning("No model evaluated")
     }
-    parms <- data.frame(initial = as.real(c(init.hl, final.init.model$k, 
-        final.init.model$d)), terminal = as.real(c(term.hl, final.term.model$k, 
+    parms <- data.frame(initial = as.double(c(init.hl, final.init.model$k, 
+        final.init.model$d)), terminal = as.double(c(term.hl, final.term.model$k, 
         final.term.model$d)))
     rownames(parms) <- c("halflife", "slope", "intercept")
-    res <- list(parms = parms, chgpt = as.real(final.chgpt), 
+    res <- list(parms = parms, chgpt = as.double(final.chgpt), 
         conc = 10^conc, time = time, method = "lee")
     class(res) <- "halflife"
     return(res)

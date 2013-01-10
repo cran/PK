@@ -238,16 +238,16 @@ auc.batch <- function(conc, time, group=NULL, method=c("t", "z", "boott"),  alte
     "two.sided"={},
   )
 
-  df <- rep(NA, as.real(length(lower)))
+  df <- rep(NA, as.double(length(lower)))
   if(any(method=="t")){
     if(any(method=='z')){
-      df=c(rep(NA, as.real(length(lower)-2)), obsv.parm$df, NA)
+      df=c(rep(NA, as.double(length(lower)-2)), obsv.parm$df, NA)
     }else{
-      df=c(rep(NA, as.real(length(lower)-1)), obsv.parm$df)
+      df=c(rep(NA, as.double(length(lower)-1)), obsv.parm$df)
     }
   } 
   res <- NULL
-  res$est <- matrix(as.real(est),ncol=1)
+  res$est <- matrix(as.double(est),ncol=1)
   if(is.null(group)){
     rownames(res$est) <- 'AUC to tlast'
   }else{
