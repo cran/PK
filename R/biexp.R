@@ -19,7 +19,7 @@ biexp <- function (conc, time, log.scale = FALSE, tol = 1e-09,  maxit = 500) {
                     x))) * (y - (a1 * exp(-b1 * x) + a2 * exp(-b2 * 
                     x))))
                   if (F < Fmin && all(b1 > 0, b2 > 0, b1 > b2)) {
-                    res <- as.real(c(a1 = a1, dl = log(b1) - 
+                    res <- as.double(c(a1 = a1, dl = log(b1) - 
                       log(b2), a2 = a2, b2 = log(b2)))
                     Fmin <- F
                   }
@@ -34,7 +34,7 @@ biexp <- function (conc, time, log.scale = FALSE, tol = 1e-09,  maxit = 500) {
                 a <- exp(parms$coef[1])
                 F <- sum(parms$resid * parms$resid)
                 if (b > 0) {
-                  res <- as.real(c(a = a, b = log(b)))
+                  res <- as.double(c(a = a, b = log(b)))
                   Fmin <- F
                 }
             }
@@ -104,8 +104,8 @@ biexp <- function (conc, time, log.scale = FALSE, tol = 1e-09,  maxit = 500) {
     }, )
     init.hl <- log(2)/b1
     term.hl <- log(2)/b2
-    parms <- data.frame(initial = as.real(c(init.hl, b1, a1)), 
-        terminal = as.real(c(term.hl, b2, a2)))
+    parms <- data.frame(initial = as.double(c(init.hl, b1, a1)), 
+        terminal = as.double(c(term.hl, b2, a2)))
     rownames(parms) <- c("halflife", "slope", "intercept")
     res <- list(parms = parms, conc = conc, time = time, method = "biexp")
     class(res) <- "halflife"

@@ -153,7 +153,7 @@ eqv.batch <- function(conc, time, group, dependent=FALSE, method=c("fieller", "z
   colnames(res) <- c('lower','upper')
 
   out <- NULL
-  out$est <- matrix(as.real(est),ncol=1)
+  out$est <- matrix(as.double(est),ncol=1)
   if(dependent){
     rownames(out$est) <- 'ratio of dependent AUCs to tlast'
   }else{

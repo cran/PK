@@ -82,14 +82,14 @@ res <- test(obj, theta=100, method="t")
 summary(res)
 
 ## bootstrap test for bioequivalence
-# Note: This can take a few minutes
+# Note: This can take a few seconds
 data(Glucose)
 ## one-sided permutation test
 obj <- auc(conc=Glucose$conc, time=Glucose$time, group=Glucose$date, 
      method=c("t"), conf.level=0.90, alternative='less', 
-     nsample=500, design="complete")
+     nsample=100, design="complete")
 
-test(obj, theta=1, method="resample", nsample=500)
+test(obj, theta=1, method="resample", nsample=100)
 
 }
 
