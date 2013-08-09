@@ -101,8 +101,10 @@ exp(t.test(log(res5$terminal), conf.level=0.95)$conf.int)
 
 #### example from Gabrielsson and Weiner (2000, page 743) 
 #### endogenous concentration is assumed to be constant over time 
-time <- c(-1, 0.167E-01, 0.1167, 0.1670, 0.25, 0.583, 0.8330, 1.083, 1.583, 2.083, 4.083, 8.083, 12, 23.5, 24.25, 26.75, 32)
-conc <- c(20.34, 3683, 884.7, 481.1, 215.6, 114, 95.8, 87.89, 60.19, 60.17, 34.89, 20.99, 20.54, 19.28, 18.18, 19.39, 22.72)
+time <- c(-1, 0.167E-01, 0.1167, 0.1670, 0.25, 0.583, 0.8330, 1.083, 1.583, 2.083, 4.083, 8.083,
+          12, 23.5, 24.25, 26.75, 32)
+conc <- c(20.34, 3683, 884.7, 481.1, 215.6, 114, 95.8, 87.89, 60.19, 60.17, 34.89, 20.99, 20.54, 
+          19.28, 18.18, 19.39, 22.72)
 data <- data.frame(conc,time)
 
 ## naive adjustment for endogenous concentration by subtraction of pre-value
@@ -116,7 +118,8 @@ split.screen(c(1,2))
 screen(1)
 plot(res6, xlab='Time (hours)', ylab='Baseline-adjusted concentration (pmol/L)')
 screen(2)
-plot(res6, log='y', ylim=c(0.1, 1E4), xlab='Time (hours)', ylab='Log of baseline-adjusted concentration (pmol/L)')
+plot(res6, log='y', ylim=c(0.1, 1E4), xlab='Time (hours)', 
+     ylab='Log of baseline-adjusted concentration (pmol/L)')
 close.screen(all.screens=TRUE)
 
 }

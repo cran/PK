@@ -8,7 +8,7 @@
 packageDescription("PK")$Version), "********** \n")
   # cat(paste("For more on PK see the vignette.\n"))
    packageStartupMessage("Type PKNews() to see new features/changes/bug fixes.\n")
-   if(as.numeric(R.Version()$major) >= 2 & as.numeric(R.Version()$minor) < 10) {packageStartupMessage(paste("The help functions for this package might not work properly. Please upgrade R to Version 2.10 or above to fix this problem.\n"))}
+   if(as.numeric(R.Version()$major) <= 2 & as.numeric(R.Version()$minor) < 10) {packageStartupMessage(paste("The help functions for this package might not work properly. Please upgrade R to Version 2.10 or above to fix this problem.\n"))}
    }
 
 
