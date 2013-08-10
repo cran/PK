@@ -66,19 +66,26 @@ plot(res.log, ylim=c(0,5), xlim=c(0, max(time)), las=1, add=TRUE, lty=2)
 legend(x=0, y=5, lty=c(1,2), legend=c("fitted on observed scale", "fitted on log-scale"))
 
 ## get residuals using function nls with tol=Inf
-parms.obs <- list(a1=res.obs$parms[3,1], b1=res.obs$parms[2,1], a2=res.obs$parms[3,2], b2=res.obs$parms[2,2])
-parms.log <- list(a1=res.log$parms[3,1], b1=res.log$parms[2,1], a2=res.log$parms[3,2], b2=res.log$parms[2,2])
+parms.obs <- list(a1=res.obs$parms[3,1], b1=res.obs$parms[2,1], a2=res.obs$parms[3,2], 
+                  b2=res.obs$parms[2,2])
+parms.log <- list(a1=res.log$parms[3,1], b1=res.log$parms[2,1], a2=res.log$parms[3,2], 
+                  b2=res.log$parms[2,2])
 
-mod.obs <- nls(conc ~ a1*exp(-b1*time) + a2*exp(-b2*time), start=parms.obs, control=nls.control(tol=Inf))
-mod.log <- nls(conc ~ a1*exp(-b1*time) + a2*exp(-b2*time), start=parms.log, control=nls.control(tol=Inf))
+mod.obs <- nls(conc ~ a1*exp(-b1*time) + a2*exp(-b2*time), start=parms.obs, 
+               control=nls.control(tol=Inf))
+mod.log <- nls(conc ~ a1*exp(-b1*time) + a2*exp(-b2*time), start=parms.log, 
+               control=nls.control(tol=Inf))
 
 ## identical estimates to mod.log but different SEs  
-summary(nls(log(conc)~log(a1*exp(-b1*time) + a2*exp(-b2*time)), start=parms.log, control=nls.control(tol=Inf)))
+summary(nls(log(conc)~log(a1*exp(-b1*time) + a2*exp(-b2*time)), start=parms.log, 
+        control=nls.control(tol=Inf)))
 
 ## different approach using weighted least squares (WLS) in nls 
 mod.ols <- nls(conc ~ a1*exp(-b1*time) + a2*exp(-b2*time), start=parms.obs)
-mod.wls1 <- nls(conc ~ a1*exp(-b1*time) + a2*exp(-b2*time), start=parms.obs, weight=1/predict(mod.ols)^1)
-mod.wls2 <- nls(conc ~ a1*exp(-b1*time) + a2*exp(-b2*time), start=parms.obs, weight=1/predict(mod.ols)^2)
+mod.wls1 <- nls(conc ~ a1*exp(-b1*time) + a2*exp(-b2*time), start=parms.obs, 
+                weight=1/predict(mod.ols)^1)
+mod.wls2 <- nls(conc ~ a1*exp(-b1*time) + a2*exp(-b2*time), start=parms.obs, 
+                weight=1/predict(mod.ols)^2)
 
 split.screen(c(2,2))
 screen(1)
@@ -141,11 +148,14 @@ close.screen(all.screens=TRUE)
 #### example from Gabrielsson and Weiner (2000, page 743) 
 #### endogenous concentration is assumed to be constant over time  
 dose <- 36630  
-time <- c(-1, 0.167E-01, 0.1167, 0.1670, 0.25, 0.583, 0.8330, 1.083, 1.583, 2.083, 4.083, 8.083, 12, 23.5, 24.25, 26.75, 32)
-conc <- c(20.34, 3683, 884.7, 481.1, 215.6, 114, 95.8, 87.89, 60.19, 60.17, 34.89, 20.99, 20.54, 19.28, 18.18, 19.39, 22.72)
+time <- c(-1, 0.167E-01, 0.1167, 0.1670, 0.25, 0.583, 0.8330, 1.083, 1.583, 2.083, 4.083, 8.083,
+          12, 23.5, 24.25, 26.75, 32)
+conc <- c(20.34, 3683, 884.7, 481.1, 215.6, 114, 95.8, 87.89, 60.19, 60.17, 34.89, 20.99, 20.54, 
+          19.28, 18.18, 19.39, 22.72)
 data <- data.frame(conc,time)
 
-## get starting values using function biexp using naive adjustment for endogenous concentration by subtraction of pre-value
+## get starting values using function biexp using naive adjustment for endogenous concentration 
+## by subtraction of pre-value
 data$concadj <- data$conc - data$conc[1]
 data$concadj[min(which(data$concadj<0)):nrow(data)] <- NA
 res.biexp <- biexp(conc=data$concadj[-1], time=data$time[-1])$parms 
@@ -159,11 +169,13 @@ data$i2 <- ifelse(data$time <0, 0, 1)
 mod.ols <- nls(conc ~ i1*base + i2*(base + a1*exp(-k1*time) + a2*exp(-k2*time)), 
                start=c(base=20.34, start), data=data, trace=TRUE)
  
-## assuming constant relative error (i.e. proportional error - weight of 2): weighted least squares  
+## assuming constant relative error (i.e. proportional error - weight of 2): weighted least
+## squares
 mod.wls <- nls(conc ~ i1*base + i2*(base + a1*exp(-k1*time) + a2*exp(-k2*time)), 
                start=c(base=20.34, start), data=data, weight=1/predict(mod.ols)^2, trace=TRUE) 
 
-## assuming constant relative error (i.e. proportional error - weight of 2): iteratively re-weighted least squares 
+## assuming constant relative error (i.e. proportional error - weight of 2): iteratively 
+## re-weighted least squares 
 mod.irwls <- mod.wls 
 for(i in 1:10){ 
    print(as.vector(coef(mod.irwls))) 
@@ -212,7 +224,8 @@ data <- subset(data, time>0)
 
 defun <- function(time, y, parms) { 
 	rte1 <- ifelse(time <= tinf, dose/tinf, 0)
-	dCptdt1 <- (rte1 + parms["synt"] - parms["cls"]*y[1] - parms["cld"]*y[1] + parms["cld"]*y[2]) / parms["vc"]
+	dCptdt1 <- (rte1 + parms["synt"] - parms["cls"]*y[1] - parms["cld"]*y[1] + 
+                    parms["cld"]*y[2]) / parms["vc"]
 	dCptdt2 <- (parms["cld"]*y[1] - parms["cld"]*y[2])/parms["vt"] 
 	list(c(dCptdt1, dCptdt2))
 }
@@ -242,7 +255,8 @@ options(warn = 0) # set back to default
 opt <- optim(gen$par, objfun, method="Nelder-Mead") 
 
 trn.wls <- nls(conc ~ modfun(time, synt, cls, cld, vc, vt), data=data, 
-               start=list(synt=opt$par[1], cls=opt$par[2], cld=opt$par[3], vc=opt$par[4], vt=opt$par[5]), 
+               start=list(synt=opt$par[1], cls=opt$par[2], cld=opt$par[3], vc=opt$par[4], 
+                          vt=opt$par[5]), 
                trace=TRUE, nls.control(tol=Inf))
 
 summary(trn.wls) 
