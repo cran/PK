@@ -1,5 +1,17 @@
 import(utils)
 
+S3method(plot, PK)
+S3method(plot, halflife) 
+S3method(print, PK)
+S3method(print, PKtest)
+S3method(summary, PK) 
+S3method(summary, PKtest)
+
+importFrom("grDevices", "palette")
+importFrom("graphics", "curve", "legend", "plot", "points")
+importFrom("stats", "cov", "lm", "median", "na.omit", "optim", "pnorm",
+           "pt", "qnorm", "qt", "quantile", "runif", "sd", "var")
+
 export(
        auc,
        auc.batch,
