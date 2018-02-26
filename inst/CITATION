@@ -10,7 +10,7 @@ citEntry(entry="Article",
          number = "3",
          pages = "284-288",
          note = "DOI: 10.1002/pst.449",
-         url = "http://CRAN.R-project.org/package=PK",         
+         url = "https://CRAN.R-project.org/package=PK",         
          textVersion = paste("Jaki T and Wolfsegger MJ (2011) Estimation of pharmacokinetic parameters with the R package PK. Pharmaceutical Statistics. Vol 10(No 3), 294-288. DOI: 10.1002/pst.449")
          )
 

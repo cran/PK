@@ -70,8 +70,8 @@ eqv.batch <- function(conc, time, group, dependent=FALSE, method=c("fieller", "z
   method <- sort(method)
   if(!is.null(group)){
     if(length(unlist(conc))!=length(unlist(group))){stop('different length of concentration and grouping lists')}
-    if(nlevels(as.factor(unlist(group))) > 2){stop("limited for comparison of 2 groups")}
-    if(nlevels(as.factor(unlist(group))) == 1) {group <- NULL}
+    if(length(unique(unlist(group))) > 2){stop("limited for comparison of 2 groups")}
+    if(length(unique(unlist(group))) == 1) {group <- NULL}
   }
 
   # handle input parameters

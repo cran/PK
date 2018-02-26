@@ -48,7 +48,7 @@ auc.ssd <- function(conc, time, group=NULL, method=c("t", "z", "boott"),  altern
   }
   if(!is.null(group)){
     if(length(conc)!=length(group)){stop('different length of input vectors')}
-    if(nlevels(as.factor(group)) > 2){stop("limited for comparison of 2 groups")}
+    if(length(unique(group)) > 2){stop("limited for comparison of 2 groups")}
   }
 
   data <- data.frame(conc=conc, time=time)
