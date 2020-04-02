@@ -12,9 +12,14 @@ Question or suggestions about the package can be send to
 
    jaki.thomas@gmail.com
 or
-   martin_wolfsegger@baxter.com
+   martin.wolfsegger@takeda.com
 
 --------------------CHANGE LOG--------------------------------------------
+Version 1.3-5
+
+  o Internal changes to ensure compatability with newer versions of R
+
+--------------------------------------------------------------------------
 Version 1.3-4
 
   o Fixed a bug in auc.ssd, auc.batch, eqv.batch

@@ -13,8 +13,10 @@ nca.ssd <- function(conc, time, n.tail=3, dose=0, method=c("z", "boott"), conf.l
     sy <- tapply(data[,2], data[,3], var)
 
     # variance-covariance matrix of observed and log-transformed data
-    for(i in 1:J){      dintern <- subset(data, data[,3]==t[i])
-      sigma[i+J,i] <- cov(dintern[,1], dintern[,2])      sigma[i,i+J] <- sigma[i+J,i] 
+    for(i in 1:J){
+      dintern <- subset(data, data[,3]==t[i])
+      sigma[i+J,i] <- cov(dintern[,1], dintern[,2])
+      sigma[i,i+J] <- sigma[i+J,i] 
     }
     diag(sigma) <- c(sx, sy)
     sigma <- ifelse(is.na(sigma), 0, sigma)
@@ -117,7 +119,7 @@ nca.ssd <- function(conc, time, n.tail=3, dose=0, method=c("z", "boott"), conf.l
     obsv.stderr <- sqrt(obsv.parms[,2]/n)
     asymp.lower <- obsv.parms[,1] - obsv.stderr*z
     asymp.upper <- obsv.parms[,1] + obsv.stderr*z
-    asymp <- data.frame(est=obsv.parms[,1], stderr=obsv.stderr, lower=asymp.lower, upper=asymp.upper,method=rep('z',6))
+    asymp <- data.frame(est=obsv.parms[,1], stderr=obsv.stderr, lower=asymp.lower, upper=asymp.upper,method=rep('z',6), stringsAsFactors = TRUE)
     res <- asymp
     if(nsample>0){
       boot.stat <- matrix(nrow=nsample, ncol=6)
@@ -135,7 +137,7 @@ nca.ssd <- function(conc, time, n.tail=3, dose=0, method=c("z", "boott"), conf.l
    
       res <- data.frame(est=rep(asymp$est,each=2), stderr=rep(asymp$stderr,each=2), 
               lower= as.vector(rbind(asymp.lower,boott.lower)), upper= as.vector(rbind(asymp.upper,boott.upper)),
-              method=rep(c('z','boott'),6))
+              method=rep(c('z','boott'),6), stringsAsFactors = TRUE)
     }
  
     return(res)		

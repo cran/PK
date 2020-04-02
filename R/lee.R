@@ -34,7 +34,7 @@ lee <- function (conc, time, points = 3, method = c("ols", "lad", "hub", "npr"),
     }
     npr <- function(y, x) {
         weighted.median <- function(w, x) {
-            data <- data.frame(x, w)
+            data <- data.frame(x, w, stringsAsFactors = TRUE)
             data <- data[order(data$x), ]
             i <- 1
             while (sum(data$w[1:i]) <= 0.5) {
@@ -85,7 +85,7 @@ lee <- function (conc, time, points = 3, method = c("ols", "lad", "hub", "npr"),
     if (points < 2) {
         stop("not enough points in terminal phase")
     }
-    data <- na.omit(data.frame(conc, time))
+    data <- na.omit(data.frame(conc, time, stringsAsFactors = TRUE))
     if (any(data$conc <= 0)) {
         data$conc[data$conc <= 0] <- NA
         warning("concentration below or equal to zero were omitted")
@@ -173,7 +173,7 @@ lee <- function (conc, time, points = 3, method = c("ols", "lad", "hub", "npr"),
     }
     parms <- data.frame(initial = as.double(c(init.hl, final.init.model$k, 
         final.init.model$d)), terminal = as.double(c(term.hl, final.term.model$k, 
-        final.term.model$d)))
+        final.term.model$d)), stringsAsFactors = TRUE)
     rownames(parms) <- c("halflife", "slope", "intercept")
     res <- list(parms = parms, chgpt = as.double(final.chgpt), 
         conc = 10^conc, time = time, method = "lee")

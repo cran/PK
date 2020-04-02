@@ -42,7 +42,7 @@ eqv.batch <- function(conc, time, group, dependent=FALSE, method=c("fieller", "z
     alpha <- 1-conf.level
     t.lb <- quantile(boot.stat, probs=c(alpha/2),   method=5, na.rm=TRUE)
     t.ub <- quantile(boot.stat, probs=c(1-alpha/2), method=5, na.rm=TRUE)
-    base <- data.frame(est=obsv.est, t.lb=t.lb, t.ub=t.ub)	
+    base <- data.frame(est=obsv.est, t.lb=t.lb, t.ub=t.ub, stringsAsFactors = TRUE)	
     base$lower <- base$est - base$t.ub*sqrt(obsv.var)
     base$upper <- base$est - base$t.lb*sqrt(obsv.var)
     return(c(base$lower, base$upper))
@@ -161,7 +161,7 @@ eqv.batch <- function(conc, time, group, dependent=FALSE, method=c("fieller", "z
   }
   colnames(out$est) <- 'est'
 
-  out$CIs<-data.frame(est=rep(est,length(method)), stderr=rep(sqrt(asym.var),length(method)), lower=res[,1], upper=res[,2], df=df ,method=method)
+  out$CIs<-data.frame(est=rep(est,length(method)), stderr=rep(sqrt(asym.var),length(method)), lower=res[,1], upper=res[,2], df=df ,method=method, stringsAsFactors = TRUE)
   if(dependent){
     rownames(out$CIs) <- paste(conf.level*100,'% CI using a ', method,'-interval for the ratio of dependent AUCs to tlast', sep='')
   }else{

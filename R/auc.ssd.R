@@ -6,7 +6,7 @@ auc.ssd <- function(conc, time, group=NULL, method=c("t", "z", "boott"),  altern
     stat <- rep(NA, nsample) 
     for(i in 1:nsample){
       boot.conc <- unlist(by(data$conc, bystrata, sample, replace=TRUE))
-      boot.data <- data.frame(time=unlist(split(data$time,bystrata[[3]])), conc=boot.conc, group=unlist(split(data$group,bystrata[[3]])))
+      boot.data <- data.frame(time=unlist(split(data$time,bystrata[[3]])), conc=boot.conc, group=unlist(split(data$group,bystrata[[3]])), stringsAsFactors = TRUE)
       boot.parm <- parms(w=w, data=boot.data)
       stat[i] <- (sum(boot.parm$est[1], -boot.parm$est[2], na.rm=TRUE) - sum(obsv.parm$est[1], -obsv.parm$est[2], na.rm=TRUE)) /
                  sqrt(sum(boot.parm$var))
@@ -51,7 +51,7 @@ auc.ssd <- function(conc, time, group=NULL, method=c("t", "z", "boott"),  altern
     if(length(unique(group)) > 2){stop("limited for comparison of 2 groups")}
   }
 
-  data <- data.frame(conc=conc, time=time)
+  data <- data.frame(conc=conc, time=time, stringsAsFactors = TRUE)
   if(is.null(strata)){strata <- rep(1, nrow(data))}
   if(is.null(group)){group <- rep(1, nrow(data))}
   data <- cbind(data, group=as.factor(group), strata=as.factor(strata))
@@ -124,7 +124,7 @@ auc.ssd <- function(conc, time, group=NULL, method=c("t", "z", "boott"),  altern
   }
   colnames(res$est) <- 'est'
   res$design<-"ssd"
-  res$CIs<-data.frame(est=est, stderr=sqrt(sum(obsv.parm$var)), lower=lower, upper=upper, df=df,method=method)
+  res$CIs<-data.frame(est=est, stderr=sqrt(sum(obsv.parm$var)), lower=lower, upper=upper, df=df,method=method, stringsAsFactors = TRUE)
   rownames(res$CIs) <- paste(conf.level*100,'% CI using a ', method,' distribution for AUC to tlast', sep='')
   res$conf.level <- conf.level
   res$conc <- conc

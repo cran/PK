@@ -53,14 +53,14 @@ print.PK <- function (x, digits=max(3, getOption("digits") - 4), ...) {
              ci = paste("(",format(round(x$CIs[x$CIs[,'method']==m, "lower"],digits=digits), digits = digits,
                   scientific=FALSE, nsmall=min(digits,2)), ";",
              format(round(x$CIs[x$CIs[,'method']==m, "upper"],digits=digits), digits = digits, scientific=FALSE, 
-             nsmall=min(digits,2)), ")", sep = ""))
+             nsmall=min(digits,2)), ")", sep = ""), stringsAsFactors = TRUE)
   }else{
     res <- data.frame(format(round(estimator(x, se = TRUE),digits=digits), digits=digits, 
                       scientific=FALSE, nsmall=min(digits,2)), 
              ci = paste("(",format(round(x$CIs[x$CIs[,'method']==m, "lower"],digits=digits), digits = digits,
                   scientific=FALSE, nsmall=min(digits,2)), ";",
              format(round(x$CIs[x$CIs[,'method']==m, "upper"],digits=digits), digits = digits, scientific=FALSE, 
-             nsmall=min(digits,2)), ")", sep = ""))
+             nsmall=min(digits,2)), ")", sep = ""), stringsAsFactors = TRUE)
 
   }
     colnames(res) <- c("Estimate", "SE", paste(x$conf.level * 100,  "% ", m, "-CI", sep = ""))

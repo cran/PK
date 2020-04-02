@@ -40,8 +40,8 @@ eqv.ssd <- function(conc, time, group, dependent=FALSE, method=c("fieller", "z",
     # bootstrap distribution
     boot.stat <- rep(NA,nsample)
     for(i in 1:nsample){
-      boot.data1 <- data.frame(time=data1$time, conc=unlist(tapply(data1$conc, bystrata1, sample, replace=TRUE)))
-      boot.data2 <- data.frame(time=data2$time, conc=unlist(tapply(data2$conc, bystrata2, sample, replace=TRUE)))
+      boot.data1 <- data.frame(time=data1$time, conc=unlist(tapply(data1$conc, bystrata1, sample, replace=TRUE)), stringsAsFactors = TRUE)
+      boot.data2 <- data.frame(time=data2$time, conc=unlist(tapply(data2$conc, bystrata2, sample, replace=TRUE)), stringsAsFactors = TRUE)
       boot.auc1 <- auc(boot.data1$conc, boot.data1$time)
       boot.auc2 <- auc(boot.data2$conc, boot.data2$time)
       boot.est <- boot.auc1$est / boot.auc2$est
@@ -50,7 +50,7 @@ eqv.ssd <- function(conc, time, group, dependent=FALSE, method=c("fieller", "z",
     }
     t.lb <- quantile(boot.stat, probs=c(alpha/2),   method=5, na.rm=TRUE)
     t.ub <- quantile(boot.stat, probs=c(1-alpha/2), method=5, na.rm=TRUE)
-    base <- data.frame(est=obsv.est, t.lb=t.lb, t.ub=t.ub)	
+    base <- data.frame(est=obsv.est, t.lb=t.lb, t.ub=t.ub, stringsAsFactors = TRUE)	
     base$lower <- base$est - base$t.ub*sqrt(obsv.var)
     base$upper <- base$est - base$t.lb*sqrt(obsv.var)
     return(c(base$lower, base$upper))
@@ -81,7 +81,7 @@ eqv.ssd <- function(conc, time, group, dependent=FALSE, method=c("fieller", "z",
   }
 
   # handle input parametersd
-  data <- data.frame(conc=conc, time=time)
+  data <- data.frame(conc=conc, time=time, stringsAsFactors = TRUE)
   if(is.null(strata)){strata <- rep(1, nrow(data))}
   data <- cbind(data, group=as.factor(group), strata=as.factor(strata))
   data <- na.omit(data[order(data$strata, data$group, data$time),])  
@@ -94,7 +94,7 @@ eqv.ssd <- function(conc, time, group, dependent=FALSE, method=c("fieller", "z",
 	
   # handle strata variable for method boott
   if(any(method=='boott')){ 
-    bystrata <- data.frame(time, group, strata)
+    bystrata <- data.frame(time, group, strata, stringsAsFactors = TRUE)
     bystrata <- bystrata[order(bystrata$group, bystrata$strata, bystrata$time),]
     bystrata1 <- as.list(subset(bystrata, bystrata$group==grpfact[1]))
     bystrata2 <- as.list(subset(bystrata, bystrata$group==grpfact[2]))
@@ -152,7 +152,7 @@ eqv.ssd <- function(conc, time, group, dependent=FALSE, method=c("fieller", "z",
   rownames(out$est) <- 'ratio of independent AUCs to tlast'
   colnames(out$est) <- 'est'
 
-  out$CIs<-data.frame(est=rep(est,length(method)), stderr=rep(sqrt(var.asymp),length(method)), lower=res[,1], upper=res[,2], df=df ,method=method)
+  out$CIs<-data.frame(est=rep(est,length(method)), stderr=rep(sqrt(var.asymp),length(method)), lower=res[,1], upper=res[,2], df=df ,method=method, stringsAsFactors = TRUE)
   rownames(out$CIs) <- paste(conf.level*100,'% CI using a ', method,'-interval for the ratio of independent AUCs to tlast', sep='')
   out$design<-"ssd"
   out$conf.level <- conf.level

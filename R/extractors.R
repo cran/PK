@@ -10,7 +10,7 @@ estimator <- function(obj, se=FALSE){
   }
   
   if(se){
-    return(data.frame(est=obj$est,se=obj$CIs[obj$CIs[,'method']==obj$CIs[1,'method'],2]))
+    return(data.frame(est=obj$est,se=obj$CIs[obj$CIs[,'method']==obj$CIs[1,'method'],2], stringsAsFactors = TRUE))
   }
   return(obj$est)
 

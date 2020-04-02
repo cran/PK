@@ -114,9 +114,9 @@ packageDescription("PK")$Version), "********** \n")
   }
 
   if(!is.null(group)){
-    data<-data.frame(id=unlist(ids),time=unlist(time),conc=unlist(conc),group=unlist(group))
+    data<-data.frame(id=unlist(ids),time=unlist(time),conc=unlist(conc),group=unlist(group), stringsAsFactors = TRUE)
   }else{
-    data<-data.frame(id=unlist(ids),time=unlist(time),conc=unlist(conc))
+    data<-data.frame(id=unlist(ids),time=unlist(time),conc=unlist(conc), stringsAsFactors = TRUE)
   }
   data <- data[order(data$time, data$id),]
   return(data)
@@ -140,7 +140,7 @@ packageDescription("PK")$Version), "********** \n")
     i<-i+ns[b]
   }
 
-  data<-data.frame(id=unlist(ids),time=unlist(time),conc=unlist(conc))
+  data<-data.frame(id=unlist(ids),time=unlist(time),conc=unlist(conc), stringsAsFactors = TRUE)
   data <- data[order(data$time, data$id),]
   J <- length(unique(data$time))
   n <- length(unique(data$id))
@@ -179,7 +179,7 @@ packageDescription("PK")$Version), "********** \n")
   if(!is.null(obj$group) && parm=="auc"){ # use permutation test    
     if(obj$design=="ssd"){ # permutation test based on ptest.ssd from Version 1.01
 
-      data <- data.frame(conc=obj$conc, time=obj$time, group=factor(obj$group))
+      data <- data.frame(conc=obj$conc, time=obj$time, group=factor(obj$group),stringsAsFactors = TRUE)
       data <- data[order(data$time, data$group),]
 
       intern <- data # internal object
@@ -203,7 +203,7 @@ packageDescription("PK")$Version), "********** \n")
       for(i in 1:nsample){
         temp <- NULL       
         for(j in 1:B){
-          temp <- data.frame(conc=obj$conc[[j]],time=obj$time[[j]])
+          temp <- data.frame(conc=obj$conc[[j]],time=obj$time[[j]],stringsAsFactors = TRUE)
           n <- as.numeric(table(temp$time)[1])
           temp <- temp[order(temp$time),]
           temp$ran <- runif(n)
@@ -250,7 +250,7 @@ packageDescription("PK")$Version), "********** \n")
     group <- obj$group
     if(is.null(obj$group)) group <- rep(1,length(obj$conc)) 
     n <-   as.numeric(table(obj$time))
-    data <- data.frame(conc=obj$conc, time=obj$time, group=factor(group))
+    data <- data.frame(conc=obj$conc, time=obj$time, group=factor(group),stringsAsFactors = TRUE)
     data <- data[order(data$time, data$group),]
     intern <- data
     for(i in 1:nsample){
@@ -272,7 +272,7 @@ packageDescription("PK")$Version), "********** \n")
     for(i in 1:nsample){
       temp <- data <- NULL       
       for(j in 1:B){
-        temp <- data.frame(conc=obj$conc[[j]],time=obj$time[[j]])
+        temp <- data.frame(conc=obj$conc[[j]],time=obj$time[[j]],stringsAsFactors = TRUE)
         n <- as.numeric(table(temp$time))
         inds <- as.vector(unlist(lapply(split(1:nrow(temp),temp$time),sample,n,replace=TRUE)))
         conc[[j]] <- temp$conc[inds]

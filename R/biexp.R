@@ -50,7 +50,7 @@ biexp <- function (conc, time, log.scale = FALSE, tol = 1e-09,  maxit = 500) {
     if (any(time < 0)) {
         stop("at least one timepoint below zero")
     }
-    data <- na.omit(data.frame(conc, time))
+    data <- na.omit(data.frame(conc, time), stringsAsFactors = TRUE)
     if (any(data$conc <= 0)) {
         data$conc[data$conc <= 0] <- NA
         warning("concentration below or equal to zero were omitted")
@@ -105,7 +105,7 @@ biexp <- function (conc, time, log.scale = FALSE, tol = 1e-09,  maxit = 500) {
     init.hl <- log(2)/b1
     term.hl <- log(2)/b2
     parms <- data.frame(initial = as.double(c(init.hl, b1, a1)), 
-        terminal = as.double(c(term.hl, b2, a2)))
+        terminal = as.double(c(term.hl, b2, a2)), stringsAsFactors = TRUE)
     rownames(parms) <- c("halflife", "slope", "intercept")
     res <- list(parms = parms, conc = conc, time = time, method = "biexp")
     class(res) <- "halflife"

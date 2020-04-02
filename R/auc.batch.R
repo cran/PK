@@ -193,7 +193,7 @@ auc.batch <- function(conc, time, group=NULL, method=c("t", "z", "boott"),  alte
 
   # sort concentrations by time order
   for(i in 1:length(time)){
-    data <- data.frame(conc=conc[[i]], time=time[[i]], group=grp[[i]])
+    data <- data.frame(conc=conc[[i]], time=time[[i]], group=grp[[i]], stringsAsFactors = TRUE)
     data <- data[order(data$time), ]
     conc[[i]]<-data$conc
     time[[i]]<-data$time
@@ -255,7 +255,7 @@ auc.batch <- function(conc, time, group=NULL, method=c("t", "z", "boott"),  alte
   }
   colnames(res$est) <- 'est'
   res$design<-"batch"
-  res$CIs<-data.frame(est=est, stderr=sqrt(sum(obsv.parm$var)), lower=lower, upper=upper, df=df,method=method)
+  res$CIs<-data.frame(est=est, stderr=sqrt(sum(obsv.parm$var)), lower=lower, upper=upper, df=df,method=method,stringsAsFactors = TRUE)
   rownames(res$CIs) <- paste(conf.level*100,'% CI using a ', method,' distribution for AUC to tlast', sep='')
   res$conf.level <- conf.level
   res$conc <- conc
