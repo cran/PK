@@ -1,8 +1,8 @@
 citHeader("To cite package PK in publications use:")
 
-citEntry(entry="Article",
+bibentry(bibtype="Article",
          title = "Estimation of pharmacokinetic parameters with the R package PK",
-         author = personList(person(given="Thomas", family="Jaki"),
+         author = c(person(given="Thomas", family="Jaki"),
 			person(given="Martin", family="Wolfsegger")),
          year = "2011",
          journal = "Pharmaceutical statistics",

@@ -1,4 +1,4 @@
-bd5b0cb39096281ddf7f1cd84066c06f *DESCRIPTION
+7132bacfba0fb31ecdd0feeecfc82844 *DESCRIPTION
 1b5bc37876bdf7aa6a22f68a334f503a *NAMESPACE
 3e68a31993214cac7a898a45a9de09de *R/all.class.R
 0e1594e80cd50c2b192c0c3b56cab637 *R/auc.R
@@ -21,8 +21,8 @@ fb4cbd47cf288bdf6ea5a1cf63b5e726 *R/nca.ssd.R
 6e1c1fd7b330c8cd62bfe54d19e4f855 *data/Glucose.RData
 94db9ae1504f136c8e8e63304f55522d *data/Rats.RData
 b50f7dd7618c3d578db3712582f7bf9d *data/Rep.tox.RData
-632a1b4bae6fe0467937feaf479998a1 *inst/CITATION
-4fb1551f2e55b9f637ef526651755e1d *inst/NEWS
+281ec9902781427183ed9b37cd70df1b *inst/CITATION
+0bbf4c0063565f454dff9308844fd43b *inst/NEWS
 3c3a929a50753c4e00e3ec14144e7642 *man/CPI975.Rd
 3e765166b584221869608a7a0fa96220 *man/Glucose.Rd
 96947254753dae87afc1e839eae69111 *man/PKNews.Rd
@@ -30,7 +30,7 @@ b50f7dd7618c3d578db3712582f7bf9d *data/Rep.tox.RData
 648ea00081be242a4c3822e1e96d45bf *man/Rep.tox.Rd
 19e8e9d47c2f1ae9ed7c9b4571efab93 *man/all.class.Rd
 a7a95e912db99465f62757d7bc062c33 *man/auc.Rd
-418fb57fb72d854ed8419c1938657dec *man/auc.complete.Rd
+f9f52d8a856d8352a8c3582c0d19a291 *man/auc.complete.Rd
 a91624a79394facb6a9a0e60f4be8d9e *man/biexp.Rd
 1c01f9e2c42e928871580cbfbfb7846e *man/ci.Rd
 544d5e5197e2ee7f08b2be067133bfae *man/eqv.Rd

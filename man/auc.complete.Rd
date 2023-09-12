@@ -115,7 +115,8 @@ tapply(res$auc, res$date, gm.ci)
 
 # comparison of AUCs using ratio of geometric means and corresponding two-sided CI 
 # repeated experiment
-model <- t.test(log(auc)~date, data=res, paired=TRUE, conf.level=0.90)
+res1<-reshape(res, idvar = "id", timevar = "date", direction = "wide")
+model <- t.test(Pair(log(auc.1),log(auc.2))~1,data=res1)
 exp(as.double(model$estimate))
 exp(model$conf.int)
 }
